@@ -97,23 +97,45 @@ st.markdown("""
         display: inline-block;
     }
     
-    /* Tablo */
-    .styled-table {
-        width: 100%;
-        border-collapse: collapse;
+    /* Mobil uyumlu */
+    @media (max-width: 768px) {
+        .metric-card {
+            padding: 15px;
+        }
+        .metric-card h1 {
+            font-size: 35px !important;
+        }
+        .nutri-box {
+            padding: 15px;
+            font-size: 14px;
+        }
+        .onboard-card {
+            padding: 25px;
+            margin: 10px;
+        }
+        h1 {
+            font-size: 28px !important;
+        }
     }
-    .styled-table th {
-        background: linear-gradient(135deg, #667eea, #764ba2);
+    
+    /* Kamera kutusu */
+    .camera-box {
+        background: linear-gradient(135deg, #ff9a56, #ff6b35);
+        border-radius: 25px;
+        padding: 30px;
+        text-align: center;
         color: white;
-        padding: 15px;
-        text-align: left;
+        margin: 20px 0;
     }
-    .styled-table td {
-        padding: 12px 15px;
-        border-bottom: 1px solid #eee;
-    }
-    .styled-table tr:hover {
-        background: #f5f5f5;
+    
+    /* Plan badge */
+    .plan-badge {
+        background: linear-gradient(135deg, #f7c948, #f39c12);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 50px;
+        font-size: 12px;
+        font-weight: bold;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -135,6 +157,10 @@ if 'calorie_today' not in st.session_state:
     st.session_state.calorie_today = 0
 if 'streak' not in st.session_state:
     st.session_state.streak = 0
+if 'plan' not in st.session_state:
+    st.session_state.plan = "free"  # free, starter, pro
+if 'photo_analysis_count' not in st.session_state:
+    st.session_state.photo_analysis_count = 0
 
 # === ONAİBOARD EKRANI ===
 if st.session_state.step == 0:
@@ -324,6 +350,59 @@ elif st.session_state.step == 1:
                 Daha spesifik sorarsan daha iyi yardımcı olabilirim! 💬"
             </div>
             """.format(st.session_state.name), unsafe_allow_html=True)
+    
+    st.markdown("---")
+    
+    # === KAMERA İLE YEMEK ANALİZİ ===
+    st.markdown("### 📸 Yemeği Tanımla (Pro)")
+    
+    if st.session_state.plan == "free":
+        st.markdown("🔒 <span class='plan-badge'>STARTER veya PRO gerekli</span>", unsafe_allow_html=True)
+        st.info("📸 Yemek fotoğrafı analizi için Starter veya Pro plana geç!")
+    else:
+        # Günlük limit kontrolü
+        daily_limit = 5 if st.session_state.plan == "starter" else 999
+        
+        st.markdown(f"📸 Bugün analiz edildi: {st.session_state.photo_analysis_count}/{daily_limit}")
+        
+        if st.session_state.photo_analysis_count < daily_limit:
+            st.markdown("""
+            <div class='camera-box'>
+                <span style='font-size:50px;'>📸</span>
+                <h3>Kamerayla Yemeği Göster</h3>
+                <p>Yemeğinin fotoğrafını çek, Nutri kalorisini hesaplasın!</p>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            uploaded_file = st.file_uploader("Fotoğraf yükle", type=["jpg", "png", "jpeg"])
+            
+            if uploaded_file is not None:
+                st.image(uploaded_file, caption='Yemek Fotoğrafı', width=300)
+                
+                if st.button("🔍 Analiz Et"):
+                    with st.spinner("Nutri analiz ediyor..."):
+                        st.session_state.photo_analysis_count += 1
+                        import time
+                        time.sleep(2)
+                        
+                    # Simüle edilmiş sonuç
+                    st.success("""
+                    🍽️ **Analiz Sonucu:**
+                    
+                    **Yemek:** Karışık salata + tavuk
+                    
+                    **Tahmini Kalori:** ~320 kcal
+                    
+                    **Protein:** 28g
+                    
+                    **Karbonhidrat:** 15g
+                    
+                    **Yağ:** 12g
+                    
+                    🐱 **Nutri:** "Güzel bir seçim! {} Protein açısından zengin, sağlıklı bir öğün. 💪"
+                    """.format(st.session_state.name))
+        else:
+            st.warning("🚫 Bugünkü analiz limitini doldurdun! Yarın tekrar dene.")
     
     st.markdown("---")
     
