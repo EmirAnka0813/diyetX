@@ -1,65 +1,28 @@
 """
 DiyetX - AI Destekli Diyet Uygulaması
-KYS Tarzı Modern Dashboard + Nutri Animasyonlu Karakter
+Tüm Rakip Özellikleri + Nutri AI
 """
 
 import streamlit as st
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, time
+import time as time_module
 
-# === KURGU ===
-st.set_page_config(
-    page_title="DiyetX",
-    page_icon="🥗",
-    layout="wide",
-    initial_sidebar_state="collapsed"
-)
+st.set_page_config(page_title="DiyetX", page_icon="🥗", layout="wide")
 
-# === CSS - Animasyonlar & Modern Tema ===
+# === CSS ===
 st.markdown("""
 <style>
-    /* Tema */
     .stApp {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     }
-    
-    /* Kartlar */
     .metric-card {
         background: white;
         border-radius: 20px;
         padding: 25px;
         text-align: center;
         box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-        transition: transform 0.3s ease;
     }
-    .metric-card:hover {
-        transform: translateY(-5px);
-    }
-    
-    /* Butonlar */
-    .stButton > button {
-        border-radius: 50px;
-        padding: 15px 30px;
-        font-weight: bold;
-        border: none;
-        transition: all 0.3s ease;
-    }
-    
-    /* Sidebar */
-    .sidebar .stRadio > label {
-        font-size: 18px;
-    }
-    
-    /* Nutri animasyonu */
-    @keyframes float {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-20px); }
-    }
-    .nutri-float {
-        animation: float 2s ease-in-out infinite;
-    }
-    
-    /* Nutri kutusu */
     .nutri-box {
         background: linear-gradient(135deg, #ff9a56, #ff6b35);
         border-radius: 25px;
@@ -67,145 +30,78 @@ st.markdown("""
         color: white;
         font-size: 18px;
         margin: 20px 0;
-        border: 3px solid white;
-        box-shadow: 0 10px 40px rgba(255,107,53,0.4);
     }
-    
-    /* Onboarding kartı */
-    .onboard-card {
-        background: white;
-        border-radius: 30px;
-        padding: 40px;
-        max-width: 500px;
-        margin: auto;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-    }
-    
-    /* Progress steps */
-    .step-active {
-        background: linear-gradient(135deg, #00d4aa, #00b894);
+    .badge {
+        background: linear-gradient(135deg, #f7c948, #f39c12);
+        border-radius: 50px;
+        padding: 10px 20px;
         color: white;
-        padding: 10px 20px;
-        border-radius: 50px;
         display: inline-block;
+        margin: 5px;
     }
-    .step-inactive {
-        background: #e0e0e0;
-        color: #999;
-        padding: 10px 20px;
-        border-radius: 50px;
-        display: inline-block;
+    .streak-fire {
+        font-size: 40px;
     }
-    
-    /* Mobil uyumlu */
-    @media (max-width: 768px) {
-        .metric-card {
-            padding: 15px;
-        }
-        .metric-card h1 {
-            font-size: 35px !important;
-        }
-        .nutri-box {
-            padding: 15px;
-            font-size: 14px;
-        }
-        .onboard-card {
-            padding: 25px;
-            margin: 10px;
-        }
-        h1 {
-            font-size: 28px !important;
-        }
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
     }
-    
-    /* Kamera kutusu */
-    .camera-box {
-        background: linear-gradient(135deg, #ff9a56, #ff6b35);
-        border-radius: 25px;
+    .pulse { animation: pulse 2s infinite; }
+    .food-green { color: #27ae60; font-weight: bold; }
+    .food-yellow { color: #f39c12; font-weight: bold; }
+    .food-red { color: #e74c3c; font-weight: bold; }
+    .fasting-timer {
+        background: linear-gradient(135deg, #2c3e50, #34495e);
+        border-radius: 20px;
         padding: 30px;
         text-align: center;
         color: white;
-        margin: 20px 0;
-    }
-    
-    /* Plan badge */
-    .plan-badge {
-        background: linear-gradient(135deg, #f7c948, #f39c12);
-        color: white;
-        padding: 5px 15px;
-        border-radius: 50px;
-        font-size: 12px;
-        font-weight: bold;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# === SESSION STATE ===
-if 'step' not in st.session_state:
-    st.session_state.step = 0  # 0=onboarding, 1=anasayfa
-if 'name' not in st.session_state:
-    st.session_state.name = ""
-if 'goal_weight' not in st.session_state:
-    st.session_state.goal_weight = 75
-if 'current_weight' not in st.session_state:
-    st.session_state.current_weight = 80
-if 'water_count' not in st.session_state:
-    st.session_state.water_count = 0
-if 'points' not in st.session_state:
-    st.session_state.points = 0
-if 'calorie_today' not in st.session_state:
-    st.session_state.calorie_today = 0
-if 'streak' not in st.session_state:
-    st.session_state.streak = 0
-if 'plan' not in st.session_state:
-    st.session_state.plan = "free"  # free, starter, pro
-if 'photo_analysis_count' not in st.session_state:
-    st.session_state.photo_analysis_count = 0
+# === SESSION STATES ===
+if 'step' not in st.session_state: st.session_state.step = 0
+if 'name' not in st.session_state: st.session_state.name = ""
+if 'goal_weight' not in st.session_state: st.session_state.goal_weight = 75
+if 'current_weight' not in st.session_state: st.session_state.current_weight = 80
+if 'water_count' not in st.session_state: st.session_state.water_count = 0
+if 'points' not in st.session_state: st.session_state.points = 0
+if 'streak' not in st.session_state: st.session_state.streak = 0
+if 'calorie_today' not in st.session_state: st.session_state.calorie_today = 0
+if 'protein' not in st.session_state: st.session_state.protein = 0
+if 'carbs' not in st.session_state: st.session_state.carbs = 0
+if 'fat' not in st.session_state: st.session_state.fat = 0
+if 'steps' not in st.session_state: st.session_state.steps = 0
+if 'sleep_hours' not in st.session_state: st.session_state.sleep_hours = 0
+if 'emotional_log' not in st.session_state: st.session_state.emotional_log = []
+if 'badges' not in st.session_state: st.session_state.badges = []
+if 'fasting_active' not in st.session_state: st.session_state.fasting_active = False
+if 'fasting_start' not in st.session_state: st.session_state.fasting_start = None
+if 'meal_reminders' not in st.session_state: st.session_state.meal_reminders = []
 
-# === ONAİBOARD EKRANI ===
+# === ONAİBOARD ===
 if st.session_state.step == 0:
-    # Ana ekran - sadece onboarding
-    st.markdown("<h1 style='text-align:center;color:white;margin-top:50px;'>🥗 DiyetX</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align:center;color:white;'>🥗 DiyetX</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align:center;color:white;font-size:20px;'>Sağlıklı beslen, hedefine ulaş!</p>", unsafe_allow_html=True)
-    
-    # Nutri animasyonlu
-    st.markdown("""
-    <div style='text-align:center;margin:40px 0;' class='nutri-float'>
-        <span style='font-size:100px;'>🐱</span>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown("<div style='text-align:center;font-size:100px;'>🐱</div>", unsafe_allow_html=True)
     
     st.markdown("""
-    <div class='onboard-card'>
-        <h2 style='text-align:center;color:#667eea;'>Hoş Geldin!</h2>
-        <p style='text-align:center;color:#666;'>Sana özel bir diyet deneyimi için önce tanışalım 😊</p>
-        <br>
+    <div style='background:white;border-radius:30px;padding:40px;max-width:500px;margin:auto;'>
+        <h2 style='color:#667eea;'>Hoş Geldin!</h2>
     """, unsafe_allow_html=True)
     
-    # Form
-    st.session_state.name = st.text_input("Adın nedir?", placeholder="Adını yaz...")
+    st.session_state.name = st.text_input("Adın?", placeholder="Adını yaz...")
+    st.session_state.current_weight = st.number_input("Mevcut kilo (kg)", 30, 200, 80)
+    st.session_state.goal_weight = st.number_input("Hedef kilo (kg)", 30, 200, 75)
+    st.selectbox("Aktivite seviyesi", ["Sedanter", "Hafif aktif", "Orta", "Çok aktif"])
+    st.selectbox("Diyet tercihi", ["Serbest", "Düşük karbonhidrat", "Yüksek protein", "Vejetaryen"])
     
-    col1, col2 = st.columns(2)
-    with col1:
-        st.session_state.current_weight = st.number_input("Mevcut kilon (kg)", min_value=30, max_value=200, value=80)
-    with col2:
-        st.session_state.goal_weight = st.number_input("Hedef kilon (kg)", min_value=30, max_value=200, value=75)
-    
-    activity = st.selectbox("Aktivite seviyen?", ["Sedanter (az hareket)", "Hafif aktif", "Orta derecede aktif", "Çok aktif"])
-    
-    diet_pref = st.selectbox("Diyet tercihin?", ["Kısıtlama yok", "Düşük karbonhidrat", "Yüksek protein", "Vejetaryen", "vegan"])
-    
-    st.markdown("</div>", unsafe_allow_html=True)
-    
-    st.markdown("<br>", unsafe_allow_html=True)
-    
-    if st.button("🚀 Hadi Başlayalım!"):
+    if st.button("🚀 Başla!"):
         if st.session_state.name:
             st.session_state.step = 1
+            st.session_state.badges = ["🎯 İlk Adım"]
             st.rerun()
-        else:
-            st.warning("Lütfen adını yaz!")
-    
     st.stop()
 
 # === ANA SAYFA ===
@@ -214,16 +110,45 @@ elif st.session_state.step == 1:
     st.markdown("""
     <div style='background:white;border-radius:20px;padding:20px;margin-bottom:20px;'>
         <h2 style='margin:0;color:#667eea;'>🥗 DiyetX</h2>
-        <p style='margin:0;color:#666;'>Hoş geldin, <b>{}</b>! 👋 Bugün nasılsın?</p>
+        <p style='margin:0;'>Hoş geldin, <b>{}</b>! 👋</p>
     </div>
     """.format(st.session_state.name), unsafe_allow_html=True)
     
-    # Nutri mesaj
+    # Streak & Puan
+    col0, col1, col2 = st.columns(3)
+    with col0:
+        st.markdown("""
+        <div class='metric-card'>
+            <span class='streak-fire'>🔥</span>
+            <h1 style='font-size:50px;margin:0;'>{}</h1>
+            <p>Gün Serisi</p>
+        </div>
+        """.format(st.session_state.streak), unsafe_allow_html=True)
+    with col1:
+        st.markdown("""
+        <div class='metric-card'>
+            <span style='font-size:40px;'>🏆</span>
+            <h1 style='font-size:50px;margin:0;'>{}</h1>
+            <p>Puan</p>
+        </div>
+        """.format(st.session_state.points), unsafe_allow_html=True)
+    with col2:
+        badges_str = " ".join(st.session_state.badges[:3]) if st.session_state.badges else "🎖️"
+        st.markdown("""
+        <div class='metric-card'>
+            <span style='font-size:40px;'>🎖️</span>
+            <p style='font-size:14px;'>{}</p>
+            <p>Rozetler</p>
+        </div>
+        """.format(badges_str), unsafe_allow_html=True)
+    
+    st.markdown("---")
+    
+    # === NUTRİ MESAJ ===
     st.markdown("""
     <div class='nutri-box'>
-        <span style='font-size:30px;' class='nutri-float'>🐱</span> 
-        <b>Nutri:</b> "Merhaba {}! Bugün {} kcal yedin, {} bardak su içtin. 
-        Hedefine {} kg kaldı! 💪 Devam et, başaracaksın!"
+        🐱 <b>Nutri:</b> "Merhaba {}! Bugün {} kcal yedin, {} bardak su içtin. 
+        Hedefine {} kg kaldı! 💪"
     </div>
     """.format(
         st.session_state.name,
@@ -234,17 +159,96 @@ elif st.session_state.step == 1:
     
     st.markdown("---")
     
-    # === METRİC KARTLAR ===
-    col1, col2, col3, col4 = st.columns(4)
+    # === KALORİ & MAKRO ===
+    st.markdown("### 🔥 Kalori & Makro Takibi")
     
-    with col1:
-        st.markdown("""
-        <div class='metric-card'>
-            <h3 style='color:#00d4aa;'>💧 Su</h3>
-            <h1 style='font-size:50px;margin:0;'>{}/8</h1>
-            <p style='color:#999;'>bardak</p>
-        </div>
-        """.format(st.session_state.water_count), unsafe_allow_html=True)
+    col_k1, col_k2, col_k3, col_k4 = st.columns(4)
+    with col_k1:
+        st.metric("Kalori", f"{st.session_state.calorie_today}", "kcal / 2000")
+    with col_k2:
+        st.metric("Protein", f"{st.session_state.protein}g", "g / 120")
+    with col_k3:
+        st.metric("Karbonhidrat", f"{st.session_state.carbs}g", "g / 200")
+    with col_k4:
+        st.metric("Yağ", f"{st.session_state.fat}g", "g / 65")
+    
+    # Makro bar
+    protein_pct = min(st.session_state.protein / 120 * 100, 100)
+    carbs_pct = min(st.session_state.carbs / 200 * 100, 100)
+    fat_pct = min(st.session_state.fat / 65 * 100, 100)
+    
+    st.markdown(f"""
+    <div style='background:white;border-radius:15px;padding:15px;margin:10px 0;'>
+        <p style='margin:0;'><b>Protein</b> - {protein_pct:.0f}%</p>
+        <div style='background:#e0e0e0;border-radius:10px;height:15px;'><div style='background:#e74c3c;width:{protein_pct}%;height:100%;border-radius:10px;'></div></div>
+    </div>
+    """, unsafe_allow_html=True)
+    st.markdown(f"""
+    <div style='background:white;border-radius:15px;padding:15px;margin:10px 0;'>
+        <p style='margin:0;'><b>Karbonhidrat</b> - {carbs_pct:.0f}%</p>
+        <div style='background:#e0e0e0;border-radius:10px;height:15px;'><div style='background:#f39c12;width:{carbs_pct}%;height:100%;border-radius:10px;'></div></div>
+    </div>
+    """, unsafe_allow_html=True)
+    st.markdown(f"""
+    <div style='background:white;border-radius:15px;padding:15px;margin:10px 0;'>
+        <p style='margin:0;'><b>Yağ</b> - {fat_pct:.0f}%</p>
+        <div style='background:#e0e0e0;border-radius:10px;height:15px;'><div style='background:#27ae60;width:{fat_pct}%;height:100%;border-radius:10px;'></div></div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # === YEMEK GİRİŞİ ===
+    st.markdown("#### 🍽️ Yemek Ekle")
+    
+    col_y1, col_y2, col_y3 = st.columns(3)
+    with col_y1:
+        yemek_adi = st.text_input("Yemek", placeholder="Örnek: Tavuk salatası")
+    with col_y2:
+        yemek_kalori = st.number_input("Kalori", 0, 2000, 200)
+    with col_y3:
+        yemek_tip = st.selectbox("Tür", ["Kahvaltı", "Öğle", "Akşam", "Atıştırmalık"])
+    
+    # Makro girişi
+    col_m1, col_m2, col_m3 = st.columns(3)
+    with col_m1:
+        yemek_protein = st.number_input("Protein (g)", 0, 200, 20)
+    with col_m2:
+        yemek_carbs = st.number_input("Karbonhidrat (g)", 0, 300, 25)
+    with col_m3:
+        yemek_fat = st.number_input("Yağ (g)", 0, 100, 10)
+    
+    # Renk puanı (Noom tarzı)
+    if yemek_kalori < 150:
+        renk_class = "food-green"
+        renk_emoji = "🟢"
+    elif yemek_kalori < 350:
+        renk_class = "food-yellow"
+        renk_emoji = "🟡"
+    else:
+        renk_class = "food-red"
+        renk_emoji = "🔴"
+    
+    if st.button(f"➕ Ekle {renk_emoji}"):
+        st.session_state.calorie_today += yemek_kalori
+        st.session_state.protein += yemek_protein
+        st.session_state.carbs += yemek_carbs
+        st.session_state.fat += yemek_fat
+        st.session_state.points += 15
+        
+        if st.session_state.calorie_today >= 2000 and len(st.session_state.badges) < 5:
+            st.session_state.badges.append("🔥 Günlük Hedef")
+        
+        st.success(f"{yemek_adi} eklendi! +{yemek_kalori} kcal")
+        st.rerun()
+    
+    st.markdown("---")
+    
+    # === SU TAKİBİ ===
+    st.markdown("### 💧 Su Takibi")
+    
+    col_s1, col_s2 = st.columns([1, 2])
+    with col_s1:
+        water_pct = min(st.session_state.water_count / 8 * 100, 100)
+        st.progress(water_pct, text=f"{st.session_state.water_count}/8 bardak")
         
         if st.button("💧 Su İçtim!", key="water"):
             st.session_state.water_count += 1
@@ -252,66 +256,101 @@ elif st.session_state.step == 1:
             st.balloons()
             st.rerun()
     
-    with col2:
-        st.markdown("""
-        <div class='metric-card'>
-            <h3 style='color:#ff6b35;'>🔥 Kalori</h3>
-            <h1 style='font-size:50px;margin:0;'>{}</h1>
-            <p style='color:#999;'>kcal / 2000</p>
-        </div>
-        """.format(st.session_state.calorie_today), unsafe_allow_html=True)
-    
-    with col3:
-        st.markdown("""
-        <div class='metric-card'>
-            <h3 style='color:#667eea;'>⚖️ Kilo</h3>
-            <h1 style='font-size:50px;margin:0;'>{}</h1>
-            <p style='color:#999;'>kg / {}</p>
-        </div>
-        """.format(st.session_state.current_weight, st.session_state.goal_weight), unsafe_allow_html=True)
-    
-    with col4:
-        st.markdown("""
-        <div class='metric-card'>
-            <h3 style='color:#f7c948;'>🏆 Puan</h3>
-            <h1 style='font-size:50px;margin:0;'>{}</h1>
-            <p style='color:#999;'>puan</p>
-        </div>
-        """.format(st.session_state.points), unsafe_allow_html=True)
+    with col_s2:
+        st.markdown("#### 💧 Neden Su İçmeliyiz?")
+        st.info("Su, metabolizmayı hızlandırır, toksinleri atar ve açlık hissini azaltır! 💪")
     
     st.markdown("---")
     
-    # === HIZLI İŞLEMLER ===
-    st.markdown("### ⚡ Hızlı İşlemler")
+    # === ADIM & AKTİVİTE ===
+    st.markdown("### 👟 Adım & Aktivite")
     
-    col5, col6 = st.columns(2)
+    col_a1, col_a2 = st.columns(2)
+    with col_a1:
+        st.metric("Bugünkü Adım", f"{st.session_state.steps}", "adım / 10,000")
+        new_steps = st.number_input("Adım ekle", 0, 50000, 1000)
+        if st.button("👟 Adım Ekle"):
+            st.session_state.steps += new_steps
+            st.session_state.points += 5
+            st.rerun()
     
-    with col5:
-        st.markdown("#### 🍽️ Yemek Ekle")
-        food_name = st.text_input("Yemek adı", placeholder="Örnek: Tavuk salatası")
-        food_cal = st.number_input("Kalori", min_value=0, max_value=2000, value=200)
+    with col_a2:
+        st.metric("Uyku", f"{st.session_state.sleep_hours}h", "saat / 8")
+        new_sleep = st.slider("Uyku saati", 0, 12, 7)
+        if st.button("😴 Uyku Kaydet"):
+            st.session_state.sleep_hours = new_sleep
+            if new_sleep >= 7:
+                st.session_state.badges.append("😴 İyi Uyku")
+                st.session_state.points += 20
+            st.rerun()
+    
+    st.markdown("---")
+    
+    # === INTERMITTENT FASTING ===
+    st.markdown("### ⏰ Intermittent Fasting")
+    
+    col_f1, col_f2 = st.columns(2)
+    with col_f1:
+        fasting_plan = st.selectbox("Fasting Planı", ["Seç", "16:8", "18:6", "20:4", "5:2"])
         
-        if st.button("➕ Ekle", key="add_food"):
-            if food_name:
-                st.session_state.calorie_today += food_cal
-                st.session_state.points += 15
-                st.success(f"{food_name} eklendi! +{food_cal} kcal, +15 puan 🎉")
+        if not st.session_state.fasting_active:
+            if st.button("▶️ Oruç Başlat"):
+                st.session_state.fasting_active = True
+                st.session_state.fasting_start = datetime.now()
+                st.success("Oruç başladı! 🎉")
                 st.rerun()
-            else:
-                st.warning("Yemek adı gerekli!")
-    
-    with col6:
-        st.markdown("#### 📊 Bugün Ne Yedim?")
-        
-        # Son yemekler (simüle)
-        if st.session_state.calorie_today > 0:
-            yemekler = pd.DataFrame({
-                "Yemek": ["Kahvaltı (Yulaf)", "Öğle (Tavuk)", "Atıştırmalık (Meyve)"],
-                "Kalori": [350, 450, 100]
-            })
-            st.dataframe(yemekler, use_container_width=True)
         else:
-            st.info("Henüz yemek eklemedin!")
+            elapsed = (datetime.now() - st.session_state.fasting_start).seconds
+            hours = elapsed // 3600
+            minutes = (elapsed % 3600) // 60
+            
+            st.markdown(f"""
+            <div class='fasting-timer'>
+                <h2>⏱️ {hours}s {minutes}dk</h2>
+                <p>Oruç devam ediyor...</p>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            if st.button("⏹️ Orucu Bitir"):
+                st.session_state.fasting_active = False
+                st.session_state.points += 50
+                st.session_state.badges.append("⏰ Oruç Tamamlandı")
+                st.success("Oruç tamamlandı! +50 puan 🎉")
+                st.rerun()
+    
+    with col_f2:
+        st.markdown("#### 🕐 Öğün Hatırlatıcıları")
+        for i, reminder in enumerate(st.session_state.meal_reminders):
+            st.write(f"• {reminder}")
+        
+        new_reminder = st.text_input("Hatırlatıcı ekle", placeholder="Örnek: 08:00 - Kahvaltı")
+        if st.button("🔔 Ekle") and new_reminder:
+            st.session_state.meal_reminders.append(new_reminder)
+            st.rerun()
+    
+    st.markdown("---")
+    
+    # === DUYGUSAL YEME GÜNLÜĞÜ ===
+    st.markdown("### 🧠 Duygusal Yeme Günlüğü (Noom Tarzı)")
+    
+    col_e1, col_e2 = st.columns(2)
+    with col_e1:
+        mood = st.selectbox("Şu anki ruh halin?", ["Mutlu", "Üzgün", "Stresli", "Sıkılmış", "Yorgun", "Endişeli"])
+        if st.button("📝 Kaydet"):
+            st.session_state.emotional_log.append({
+                "tarih": datetime.now().strftime("%d.%m.%Y %H:%M"),
+                "ruh": mood,
+                "kalori": st.session_state.calorie_today
+            })
+            st.session_state.points += 5
+            st.success("Kaydedildi!")
+    
+    with col_e2:
+        if st.session_state.emotional_log:
+            st.markdown("#### 📊 Son Kayıtlar")
+            for log in st.session_state.emotional_log[-5:]:
+                emoji = "😊" if log["ruh"] == "Mutlu" else "😢" if log["ruh"] == "Üzgün" else "😰"
+                st.write(f"{emoji} {log['tarih']} - {log['ruh']} ({log['kalori']} kcal)")
     
     st.markdown("---")
     
@@ -323,105 +362,70 @@ elif st.session_state.step == 1:
         if any(x in prompt.lower() for x in ["yemel", "ne yem", "yemek"]):
             st.markdown("""
             <div class='nutri-box'>
-                <b>Nutri:</b> "{} için harika bir seçim! 
-                🍳 Kahvaltı: Yulaf + meyve
-                🥗 Öğle: Izgara tavuk + salata
-                🐟 Akşam: Fırında somon
-                💧 Arada 2 bardak su!"
+                <b>Nutri:</b> "{} için harika! 🍳
+                Kahvaltı: Yulaf + meyve + yumurta (350 kcal)
+                Öğle: Izgara tavuk + salata (450 kcal)
+                Akşam: Fırında somon + sebze (400 kcal)
+                💧 Arada 2 bardak su iç!"
             </div>
             """.format(st.session_state.name), unsafe_allow_html=True)
-        elif any(x in prompt.lower() for x in ["su", "su iç"]):
+        elif "su" in prompt.lower():
+            kalan = 8 - st.session_state.water_count
             st.markdown("""
             <div class='nutri-box'>
                 <b>Nutri:</b> "{} su çok önemli! 💧 
-                Şu an {}/8 bardakadasın. 
-                Hedefe ulaşman için {} bardak daha iç! 💪"
+                Şu an {}/8 bardak. {} bardak daha iç! 💪"
             </div>
-            """.format(
-                st.session_state.name,
-                st.session_state.water_count,
-                8 - st.session_state.water_count
-            ), unsafe_allow_html=True)
+            """.format(st.session_state.name, st.session_state.water_count, kalan), unsafe_allow_html=True)
+        elif "oruç" in prompt.lower() or "fasting" in prompt.lower():
+            st.markdown("""
+            <div class='nutri-box'>
+                <b>Nutri:</b> "Intermittent fasting harika! ⏰
+                16:8 = 16 saat oruç, 8 saat yemek
+                18:6 = 18 saat oruç, 6 saat yemek
+                Hangisini tercih edersin? 😊"
+            </div>
+            """, unsafe_allow_html=True)
         else:
             st.markdown("""
             <div class='nutri-box'>
                 <b>Nutri:</b> "Harika soru {}! 😊 
-                Sana yardımcı olmak için buradayım. 
-                Daha spesifik sorarsan daha iyi yardımcı olabilirim! 💬"
+                Sana yardımcı olmak için buradayım!"
             </div>
             """.format(st.session_state.name), unsafe_allow_html=True)
     
     st.markdown("---")
     
-    # === KAMERA İLE YEMEK ANALİZİ ===
-    st.markdown("### 📸 Yemeği Tanımla (Pro)")
+    # === BMR HESAPLAYICI ===
+    st.markdown("### 🧮 BMR Hesaplayıcı")
     
-    if st.session_state.plan == "free":
-        st.markdown("🔒 <span class='plan-badge'>STARTER veya PRO gerekli</span>", unsafe_allow_html=True)
-        st.info("📸 Yemek fotoğrafı analizi için Starter veya Pro plana geç!")
-    else:
-        # Günlük limit kontrolü
-        daily_limit = 5 if st.session_state.plan == "starter" else 999
+    col_b1, col_b2 = st.columns(2)
+    with col_b1:
+        age = st.number_input("Yaş", 10, 100, 25)
+        height_cm = st.number_input("Boy (cm)", 120, 220, 170)
+        weight_kg = st.number_input("Kilo (kg)", 30, 200, st.session_state.current_weight)
         
-        st.markdown(f"📸 Bugün analiz edildi: {st.session_state.photo_analysis_count}/{daily_limit}")
-        
-        if st.session_state.photo_analysis_count < daily_limit:
-            st.markdown("""
-            <div class='camera-box'>
-                <span style='font-size:50px;'>📸</span>
-                <h3>Kamerayla Yemeği Göster</h3>
-                <p>Yemeğinin fotoğrafını çek, Nutri kalorisini hesaplasın!</p>
+        if st.button("📊 BMR Hesapla"):
+            # Mifflin-St Jeor
+            bmr = 10 * weight_kg + 6.25 * height_cm - 5 * age + 5
+            st.session_state.bmr = bmr
+            st.success(f"Bazal Metabolizma Hızın: {bmr} kcal/gün")
+    
+    with col_b2:
+        if 'bmr' in st.session_state:
+            st.markdown(f"""
+            <div class='metric-card'>
+                <h3>BMR: {} kcal/gün</h3>
+                <p>Günde {} kcal tüketirsen kilo verirsin</p>
             </div>
-            """, unsafe_allow_html=True)
-            
-            uploaded_file = st.file_uploader("Fotoğraf yükle", type=["jpg", "png", "jpeg"])
-            
-            if uploaded_file is not None:
-                st.image(uploaded_file, caption='Yemek Fotoğrafı', width=300)
-                
-                if st.button("🔍 Analiz Et"):
-                    with st.spinner("Nutri analiz ediyor..."):
-                        st.session_state.photo_analysis_count += 1
-                        import time
-                        time.sleep(2)
-                        
-                    # Simüle edilmiş sonuç
-                    st.success("""
-                    🍽️ **Analiz Sonucu:**
-                    
-                    **Yemek:** Karışık salata + tavuk
-                    
-                    **Tahmini Kalori:** ~320 kcal
-                    
-                    **Protein:** 28g
-                    
-                    **Karbonhidrat:** 15g
-                    
-                    **Yağ:** 12g
-                    
-                    🐱 **Nutri:** "Güzel bir seçim! {} Protein açısından zengin, sağlıklı bir öğün. 💪"
-                    """.format(st.session_state.name))
-        else:
-            st.warning("🚫 Bugünkü analiz limitini doldurdun! Yarın tekrar dene.")
+            """.format(st.session_state.bmr, st.session_state.bmr - 500), unsafe_allow_html=True)
     
     st.markdown("---")
     
-    # === İLERLEME ===
-    st.markdown("### 📈 İlerleme")
+    # === LİDERLİK TABLOSU ===
+    st.markdown("### 🏆 Liderlik Tablosu (Yakında)")
     
-    # Progress bar'lar
-    water_pct = min(st.session_state.water_count / 8 * 100, 100)
-    calorie_pct = min(st.session_state.calorie_today / 2000 * 100, 100)
-    weight_diff = max(0, (st.session_state.current_weight - st.session_state.goal_weight) / (st.session_state.current_weight - st.session_state.goal_weight + 10) * 100)
-    
-    st.markdown("""
-    <table class='styled-table'>
-        <tr><th>Özellik</th><th>Durum</th><th>Günlük Hedef</th></tr>
-        <tr><td>💧 Su</td><td><div style='background:#e0e0e0;border-radius:10px;width:100%;height:20px;'><div style='background:linear-gradient(90deg,#00d4aa,#00b894);width:{}%;height:100%;border-radius:10px;'></div></div></td><td>{}/8 bardak</td></tr>
-        <tr><td>🔥 Kalori</td><td><div style='background:#e0e0e0;border-radius:10px;width:100%;height:20px;'><div style='background:linear-gradient(90deg,#ff9a56,#ff6b35);width:{}%;height:100%;border-radius:10px;'></div></div></td><td>{}/2000 kcal</td></tr>
-        <tr><td>⚖️ Kilo</td><td><div style='background:#e0e0e0;border-radius:10px;width:100%;height:20px;'><div style='background:linear-gradient(90deg,#667eea,#764ba2);width:{}%;height:100%;border-radius:10px;'></div></div></td><td>{} → {} kg</td></tr>
-    </table>
-    """.format(water_pct, st.session_state.water_count, calorie_pct, st.session_state.calorie_today, weight_diff, st.session_state.current_weight, st.session_state.goal_weight), unsafe_allow_html=True)
+    st.info("👥 Arkadaşını davet et, birlikte yarışın! (Yakında)")
     
     st.markdown("---")
     
