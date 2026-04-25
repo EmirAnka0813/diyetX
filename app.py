@@ -80,6 +80,8 @@ st.markdown("""
         color: white;
         font-size: 18px;
         margin: 20px 0;
+        border: 3px solid #fff;
+        box-shadow: 0 10px 40px rgba(255,107,53,0.3);
     }
     
     /* Progress bar */
@@ -122,8 +124,8 @@ with col1:
     # 💧 Su Takibi
     st.markdown("### 💧 Su Tüketimi")
     
-    # Progress bar
-    water_progress = st.session_state.water_count / 8
+    # Progress bar (max 1.0 ile sınırla)
+    water_progress = min(st.session_state.water_count / 8, 1.0)
     st.progress(water_progress, text=f"{st.session_state.water_count}/8 bardak")
     
     # Su butonu
