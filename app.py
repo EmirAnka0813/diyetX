@@ -413,12 +413,13 @@ elif st.session_state.step == 1:
     
     with col_b2:
         if 'bmr' in st.session_state:
-            st.markdown(f"""
+            bmr_val = st.session_state.bmr
+            st.markdown("""
             <div class='metric-card'>
                 <h3>BMR: {} kcal/gün</h3>
                 <p>Günde {} kcal tüketirsen kilo verirsin</p>
             </div>
-            """.format(st.session_state.bmr, st.session_state.bmr - 500), unsafe_allow_html=True)
+            """.format(bmr_val, bmr_val - 500), unsafe_allow_html=True)
     
     st.markdown("---")
     
