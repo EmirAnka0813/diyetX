@@ -247,7 +247,7 @@ elif st.session_state.step == 1:
     
     col_s1, col_s2 = st.columns([1, 2])
     with col_s1:
-        water_pct = min(st.session_state.water_count / 8 * 100, 100)
+        water_pct = min(st.session_state.water_count / 8, 1.0)
         st.progress(water_pct, text=f"{st.session_state.water_count}/8 bardak")
         
         if st.button("💧 Su İçtim!", key="water"):
