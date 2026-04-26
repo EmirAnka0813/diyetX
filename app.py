@@ -31,7 +31,7 @@ st.markdown(""""
     position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; overflow: hidden; pointer-events: none;
 }
 .food-fall {
-    position: absolute; font-size: 40px; opacity: 0.25; animation: foodFall linear infinite;
+    position: absolute; font-size: 45px; opacity: 0.6; animation: foodFall linear infinite;
 }
 @keyframes foodFall {
     0% { transform: translateY(-50px) rotate(0deg); opacity: 0; }
