@@ -28,7 +28,7 @@ st.markdown(""""
 
 /* Animated Food Background */
 .food-bg {
-    position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; overflow: hidden; pointer-events: none;
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; overflow: visible; pointer-events: none;
 }
 .food-fall {
     position: absolute; font-size: 45px; opacity: 0.6; animation: foodFall linear infinite;
