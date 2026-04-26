@@ -4,6 +4,10 @@ Kayıt Sistemi + Landing Page + Diyet Listesi
 """
 
 import os
+import sentry_sdk
+
+# Sentry hata izleme
+sentry_sdk.init("https://97f83997b663a5a3545311ee0582c716@o4511259385397248.ingest.us.sentry.io/4511281486626816")
 
 # Railway PORT ayarı
 PORT = int(os.environ.get("PORT", 8080))
