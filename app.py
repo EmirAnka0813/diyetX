@@ -323,134 +323,74 @@ elif st.session_state.step == 3:
 
 # === ANA UYGULAMA (step=4) ===
 elif st.session_state.step == 4:
-    # Sidebar menü
-    st.markdown("""
-    <style>
-    .neon-text {
-        color: #ff00ff;
-        text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff;
-        font-size: 18px;
-        font-weight: bold;
-    }
-    .neon-cyan {
-        color: #00ffff;
-        text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
-    }
-    .neon-orange {
-        color: #ff9a56;
-        text-shadow: 0 0 10px #ff9a56, 0 0 20px #ff9a56;
-    }
-    .sidebar-menu {
-        background: linear-gradient(180deg, #1a1a2e 0%, #0a0a15 100%);
-        padding: 15px;
-        border-radius: 15px;
-        margin-top: 20px;
-    }
-    .menu-header {
-        color: #e040fb;
-        font-size: 14px;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        margin-bottom: 15px;
-        padding-bottom: 10px;
-        border-bottom: 1px solid rgba(224, 64, 251, 0.3);
-    }
-    .menu-item {
-        color: rgba(255,255,255,0.8);
-        padding: 12px 15px;
-        margin: 5px 0;
-        border-radius: 10px;
-        background: rgba(255,255,255,0.05);
-        transition: all 0.3s;
-        cursor: pointer;
-        font-size: 14px;
-    }
-    .menu-item:hover {
-        background: rgba(224, 64, 251, 0.2);
-        color: #e040fb;
-    }
-    .menu-item.active {
-        background: linear-gradient(90deg, rgba(224, 64, 251, 0.3), transparent);
-        color: #e040fb;
-        border-left: 3px solid #e040fb;
-    }
-    .sub-menu {
-        color: rgba(255,255,255,0.6);
-        padding: 8px 15px 8px 30px;
-        font-size: 13px;
-        margin: 3px 0;
-        border-radius: 8px;
-        background: rgba(255,255,255,0.03);
-    }
-    .sub-menu:hover {
-        color: #00ffff;
-        background: rgba(0, 255, 255, 0.1);
-    }
-    </style>
-    <div class="sidebar-menu">
-        <div class="menu-header">NAVIGASYON</div>
-        <div class="menu-item active">Ana Panel</div>
-        <div class="menu-item">Diyet Listesi</div>
-        <div class="menu-item">Su Takibi</div>
-        <div class="menu-item">Adim & Uyku</div>
-        <div class="menu-item">Orucluk</div>
-        <div class="menu-item">Duygusal Yeme</div>
-        <div class="menu-item">Nutri Asistan</div>
-        <br>
-        <div class="menu-header">AYARLAR</div>
-        <div class="sub-menu">Profil Düzenle</div>
-        <div class="sub-menu">Hedef Degistir</div>
-        <div class="sub-menu">Diyet Tercihi</div>
-        <div class="sub-menu">Bildirimler</div>
-        <br>
-        <div class="menu-header">ROZETLER</div>
-        <div class="sub-menu">Kazanilan Rozetler</div>
-        <div class="sub-menu">Basarilar</div>
-    </div>
-    """, unsafe_allow_html=True)
+    # Sidebar - Temiz Menu
+    menu_icons = {"Ana Panel": "🏠", "Diyet Listesi": "🍽️", "Su Takibi": "💧", "Adim & Uyku": "👟", "Orucluk": "⏰", "Duygusal Yeme": "😊", "Nutri Asistan": "💬"}
     
-    # Sidebar
     with st.sidebar:
-        st.markdown('<div style="text-align:center;padding:10px 0;"><span style="font-size:40px;">🐱</span><br><span class="neon-text">' + st.session_state.user_name + '</span></div>', unsafe_allow_html=True)
+        st.markdown(f"<h2 style='text-align:center;color:#e040fb;text-shadow:0 0 15px #e040fb;'>🐱 DiyetX</h2>", unsafe_allow_html=True)
+        st.markdown(f"<p style='text-align:center;color:white;'>Hos geldin, <b>{st.session_state.user_name}</b></p>", unsafe_allow_html=True)
         st.markdown("---")
         
-        selected_menu = st.radio("Menu", [
-            "Ana Panel", 
-            "Diyet Listesi", 
-            "Su Takibi", 
-            "Adim & Uyku", 
-            "Orucluk",
-            "Duygusal Yeme", 
-            "Nutri Asistan"
-        ], index=0)
+        selected_menu = st.radio("Menu", list(menu_icons.keys()), format_func=lambda x: f"{menu_icons[x]} {x}", index=0)
         
         st.markdown("---")
-        st.markdown('<div class="neon-cyan" style="font-size:12px;text-align:center;">PUAN</div>', unsafe_allow_html=True)
-        st.markdown('<div style="text-align:center;font-size:32px;font-weight:bold;color:#00ffff;text-shadow:0 0 15px #00ffff;">' + str(st.session_state.points) + '</div>', unsafe_allow_html=True)
+        st.markdown(f"<div style='text-align:center;padding:15px;background:linear-gradient(135deg,rgba(224,64,251,0.2),rgba(0,255,255,0.2));border-radius:15px;'>", unsafe_allow_html=True)
+        st.markdown(f"<div style='color:#00ffff;font-size:12px;'>PUAN</div>", unsafe_allow_html=True)
+        st.markdown(f"<div style='font-size:36px;font-weight:bold;color:#00ffff;text-shadow:0 0 20px #00ffff;'>{st.session_state.points}</div>", unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
         
         st.markdown("---")
-        with st.expander("Ayarlar"):
+        with st.expander("⚙️ Ayarlar"):
             st.write("Profil Düzenle")
             st.write("Hedef Degistir")
             st.write("Diyet Tercihi")
-        with st.expander("Rozetler"):
+        with st.expander("🏅 Rozetler"):
             for badge in st.session_state.badges:
                 st.write(f"🏅 {badge}")
     
-    st.markdown('<nav class="navbar"><div class="logo">DiyetX</div><div style="color:white;">Hos geldin, <b>' + st.session_state.user_name + '</b>!</div></nav><br><br><br>', unsafe_allow_html=True)
+    # Ana Panel
+    if selected_menu == "Ana Panel":
+        st.markdown("<h1 style='color:#e040fb;text-shadow:0 0 10px #e040fb;'>Ana Panel</h1>", unsafe_allow_html=True)
+        
+        # Üst kartlar
+        col0, col1, col2, col3 = st.columns(4)
+        with col0:
+            st.markdown(f"<div style='background:linear-gradient(135deg,#1a1a2e,#0a0a15);padding:25px;border-radius:15px;text-align:center;border:1px solid rgba(224,64,251,0.3);'><div style='font-size:12px;color:rgba(255,255,255,0.6);'>AKTAR</div><div style='font-size:48px;color:#ff9a56;'>{st.session_state.streak}</div><div style='color:rgba(255,255,255,0.5);font-size:12px;'>Gün Serisi</div></div>", unsafe_allow_html=True)
+        with col1:
+            st.markdown(f"<div style='background:linear-gradient(135deg,#1a1a2e,#0a0a15);padding:25px;border-radius:15px;text-align:center;border:1px solid rgba(0,255,255,0.3);'><div style='font-size:12px;color:rgba(255,255,255,0.6);'>PUAN</div><div style='font-size:48px;color:#00ffff;'>{st.session_state.points}</div><div style='color:rgba(255,255,255,0.5);font-size:12px;'>Toplam Puan</div></div>", unsafe_allow_html=True)
+        with col2:
+            st.markdown(f"<div style='background:linear-gradient(135deg,#1a1a2e,#0a0a15);padding:25px;border-radius:15px;text-align:center;border:1px solid rgba(39,174,96,0.3);'><div style='font-size:12px;color:rgba(255,255,255,0.6);'>KALORI</div><div style='font-size:48px;color:#27ae60;'>{st.session_state.calorie_today}</div><div style='color:rgba(255,255,255,0.5);font-size:12px;'>Bugün</div></div>", unsafe_allow_html=True)
+        with col3:
+            st.markdown(f"<div style='background:linear-gradient(135deg,#1a1a2e,#0a0a15);padding:25px;border-radius:15px;text-align:center;border:1px solid rgba(0,150,200,0.3);'><div style='font-size:12px;color:rgba(255,255,255,0.6);'>SU</div><div style='font-size:48px;color:#0096c8;'>{st.session_state.water_count}/8</div><div style='color:rgba(255,255,255,0.5);font-size:12px;'>Bardak</div></div>", unsafe_allow_html=True)
+        
+        st.markdown("<br>", unsafe_allow_html=True)
+        
+        # Nutri mesaj
+        st.markdown(f"<div style='background:linear-gradient(135deg,rgba(224,64,251,0.15),rgba(0,255,255,0.15));padding:20px;border-radius:15px;border:1px solid rgba(224,64,251,0.3);'><span style='font-size:20px;'>🐱</span> <b style='color:#e040fb;'>Nutri:</b> Merhaba {st.session_state.user_name}! Bugün {st.session_state.calorie_today} kcal yedin, {st.session_state.water_count} bardak su içtin. Hedefine {max(0, st.session_state.current_weight - st.session_state.goal_weight)} kg kaldı!</div>", unsafe_allow_html=True)
+        
+        st.markdown("<br>", unsafe_allow_html=True)
+        
+        # Hızlı ekleme
+        st.markdown("<h3 style='color:#e040fb;'>Hizli Ekle</h3>", unsafe_allow_html=True)
+        col_quick1, col_quick2 = st.columns(2)
+        with col_quick1:
+            with st.expander("🍽️ Yemek Ekle"):
+                yemek_adi = st.text_input("Yemek", placeholder="Ornek: Tavuk salatasi")
+                yemek_kalori = st.number_input("Kalori", 0, 2000, 200)
+                if st.button("Ekle", key="food_add_btn"):
+                    st.session_state.calorie_today += yemek_kalori
+                    st.session_state.points += 15
+                    st.success(f"{yemek_adi} eklendi!")
+        with col_quick2:
+            with st.expander("💧 Su Ekle"):
+                if st.button("Su Ictim!", key="water"):
+                    st.session_state.water_count += 1
+                    st.session_state.points += 10
+                    st.rerun()
     
-    col0, col1, col2 = st.columns(3)
-    with col0:
-        st.markdown('<div class="feature-card" style="text-align:center;"><span style="font-size:60px;">AKTAR</span><h1 style="font-size:60px;margin:0;">' + str(st.session_state.streak) + '</h1><p>Gun Serisi</p></div>', unsafe_allow_html=True)
-    with col1:
-        st.markdown('<div class="feature-card" style="text-align:center;"><span style="font-size:60px;">PUAN</span><h1 style="font-size:60px;margin:0;">' + str(st.session_state.points) + '</h1><p>Puan</p></div>', unsafe_allow_html=True)
-    with col2:
-        badges_str = " ".join(st.session_state.badges[-3:]) if st.session_state.badges else "Rozet"
-        st.markdown('<div class="feature-card" style="text-align:center;"><span style="font-size:60px;">ROZET</span><p style="font-size:20px;">' + badges_str + '</p><p>Rozetler</p></div>', unsafe_allow_html=True)
-    
-    st.markdown('<div class="nutri-box">Nutri: Merhaba ' + st.session_state.user_name + '! Bugun ' + str(st.session_state.calorie_today) + ' kcal yedin, ' + str(st.session_state.water_count) + ' bardak su icdin. Hedefine ' + str(max(0, st.session_state.current_weight - st.session_state.goal_weight)) + ' kg kaldi!</div>', unsafe_allow_html=True)
-    
-    st.markdown("### Haftalik Diyet Listesi")
+    # Diyet Listesi
+    elif selected_menu == "Diyet Listesi":
+        st.markdown("<h1 style='color:#e040fb;text-shadow:0 0 10px #e040fb;'>🍽️ Haftalik Diyet Listesi</h1>", unsafe_allow_html=True)
     
     if st.session_state.diet_plan:
         days = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"]
