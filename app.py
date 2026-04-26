@@ -574,7 +574,7 @@ elif st.session_state.step == 4:
                     color = "#e74c3c"
                     emoji = "🔴"
                 
-                st.markdown(f"""
+                st.markdown("""
                 <div class='diet-card'>
                     <h4 style='margin:0 0 10px 0;color:#667eea;'>{} {}</h4>
                     <p style='margin:0;font-size:1.1em;'>🍽️ {}</p>
