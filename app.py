@@ -431,29 +431,32 @@ elif st.session_state.step == 4:
                 st.write(f"{emoji_m} {log['tarih']} - {log['ruh']} ({log['kalori']} kcal)")
     
     st.markdown("### Nutri ile Konus")
-    if prompt := st.text_input("Nutri'ye sor...", placeholder="Ornek: Bugun ne yemeliyim?"):
+    if prompt := st.text_input("Nutri'ye sor...", placeholder="Ornek: Pilav yerine ne yiyebilirim?"):
         prompt_lower = prompt.lower()
         
-        # Yemek degisikligi onerlri
+        # Yemek degisikligi onerlri - DENGELI CEVAP
         if any(x in prompt_lower for x in ["degistir", "farkli", "baska", "yerine", " alternatif"]):
-            st.markdown('<div class="nutri-box">Nutri: Tabii! Iste birkac secenek:<br><br><b>Pilav yerine:</b> Bulgur pilavi, tam bugday ekmek, patates<br><br><b>Tavuk yerine:</b> balik, tofu, yumurta, kirmizi et<br><br><b>Meyve yerine:</b> kuruyemis, yogut, peynir<br><br><b>Hangisini tercih edersin?</b></div>', unsafe_allow_html=True)
+            st.markdown('<div class="nutri-box">Nutri: Tabii! Diyet listenize uygun alternatifler:<br><br><b>Pilav yerine:</b><br>- Bulgur pilavi (ayni kaloride, daha fazla lif)<br>- Tam bugday ekmek (biraz daha az kalorili)<br>- Patates püresi (nadir kullanilir, dikkat)<br><br><b>Tavuk yerine:</b><br>- Balik (daha az kalorili, omega-3!)<br>- Yumurta (aynı protein, daha ucuz)<br>- Tofu (vejetaryen secenegi)<br><br><b>Meyve yerine:</b><br>- Kuruyemis (daha kalorili, porsiyon kontrolu!)<br>- Yogurt (protein deposu!)<br>- Peynir (kalorili ama kalsiyum!</div>', unsafe_allow_html=True)
         
-        # Soru-cevap formatinda
+        # Soru-cevap formatinda - DENGELI
         elif any(x in prompt_lower for x in ["yiyebilir", "yiyebilir miyim", "yebilir miyim", "mide"]):
-            st.markdown('<div class="nutri-box">Nutri: Harika soru! Bu besinler hafif ve saglikli:<br><br> YESIL Yiyebilirsin: Salata, meyve, tavuk gögusun, yumurta<br><br> SARI Dikkat et: Pilav, makarna, ekmek (porsiyon kontrolu)<br><br> KIRMIZI Kac-in: Islenmis gidalar, sekerli icecekler<br><br>Sana göre bir öneri istemis miydin?</div>', unsafe_allow_html=True)
+            st.markdown('<div class="nutri-box">Nutri: Bu besinler hakkinda bilgi:<br><br> YESIL Olur: Salata, meyve, tavuk gögusun, yumurta, sebze<br><br> SARI Dikkat: Pilav, makarna, ekmek (porsiyon kontrolu lazim!)<br><br> KIRMIZI Kacin: Kizarik et, islenmis gidalar, sekerli icecekler<br><br>Her besin diyet planina uygun miktarda tukenebilir!</div>', unsafe_allow_html=True)
         
         elif any(x in prompt_lower for x in ["ne yemel", "yemel", "menu", "liste"]):
-            st.markdown('<div class="nutri-box">Nutri: Tabii! Iste bir örnek menü:<br><br><b>Kahvalti:</b> Yulaf + meyve + yumurta (350 kcal)<br><b>Ogle:</b> Izgara balik + salata (400 kcal)<br><b>Aksam:</b> Sebze çorbasi + et (350 kcal)<br><b>Atistirma:</b> Bir avuç badem (150 kcal)<br><br><b>Toplam: ~1250 kcal</b> - Günlük hedefinin altinda kalirsin!</div>', unsafe_allow_html=True)
+            st.markdown('<div class="nutri-box">Nutri: Diyet listenize tam uygun menü:<br><br><b>Kahvalti:</b> Yulaf + meyve + yumurta (350 kcal)<br><b>Ogle:</b> Izgara balik + salata (400 kcal)<br><b>Aksam:</b> Sebze Corbasi + et (350 kcal)<br><b>Atistirma:</b> Bir avuc badem (150 kcal)<br><br><b>Toplam: ~1250 kcal</b> - Günlük hedefinin altinda kalirsin!</div>', unsafe_allow_html=True)
         
         elif "su" in prompt_lower:
             kalan = 8 - st.session_state.water_count
-            st.markdown('<div class="nutri-box">Su cok onemli! Suan ' + str(st.session_state.water_count) + '/8 bardak. ' + str(kalan) + ' bardak daha ic!<br><br><b>Su artirma ipuclari:</b><br>- Her öğünden önce 1 bardak<br>- Aroma kat: limon, nane<br>- Su sisemiz yaninda tasi!</div>', unsafe_allow_html=True)
+            st.markdown('<div class="nutri-box">Su cok onemli! Suan ' + str(st.session_state.water_count) + '/8 bardak. ' + str(kalan) + ' bardak daha ic!<br><br><b>Su artirma ipuclari:</b><br>- Her öğünden önce 1 bardak su<br>- L limon veya nane ekle tatlandir<br>- Yaninda bir su sisemiz tasi!</div>', unsafe_allow_html=True)
         
         elif "kalori" in prompt_lower:
-            st.markdown('<div class="nutri-box">Nutri: Günlük kaloriniz:<br><br><b>Yogunla:</b> ' + str(st.session_state.calorie_today) + ' kcal<br><b>Hedef:</b> 2000 kcal<br><b>Kalan:</b> ' + str(max(0, 2000 - st.session_state.calorie_today)) + ' kcal<br><br>' + ('Harika gidiyorsun!' if st.session_state.calorie_today < 2000 else 'Dikkat! Hedefi astin!') + '</div>', unsafe_allow_html=True)
+            st.markdown('<div class="nutri-box">Nutri: Günlük kaloriniz:<br><br><b>Yogunla:</b> ' + str(st.session_state.calorie_today) + ' kcal<br><b>Hedef:</b> 2000 kcal<br><b>Kalan:</b> ' + str(max(0, 2000 - st.session_state.calorie_today)) + ' kcal<br><br>' + ('Harika gidiyorsun, hedefe yakinsin!' if st.session_state.calorie_today < 2000 else 'Dikkat! Hedefi astin ama hemen panik yok, yarin daha dikkatli ol!') + '</div>', unsafe_allow_html=True)
+        
+        elif "diyet" in prompt_lower or "plan" in prompt_lower:
+            st.markdown('<div class="nutri-box">Nutri: Senin icin hazirlanan haftalik diyet listesi var!<br><br>Günleri yukaridan sec ve her öğünü gör.<br><br>Listen dışında bir sey yemek istersen, bana sor - alternatif önereyim!<br><br>Birlikte basaracagiz!</div>', unsafe_allow_html=True)
         
         else:
-            st.markdown('<div class="nutri-box">Nutri: Harika soru! Sana yardimci olmak icin buradayim.<br><br>Bana sorabilirsin:<br>- Bugun ne yemeliyim?<br>- [X] yerine ne yiyebilirim?<br>- Bana farkli bir menu ver<br>- Kalorim ne durumda?<br><br>Ne sormak istersin?</div>', unsafe_allow_html=True)
+            st.markdown('<div class="nutri-box">Nutri: Merhaba! Sana yardimci olmak icin buradayim.<br><br>Sor bana:<br>- "Pilav yerine ne yiyebilirim?"<br>- "Bugun ne yemeliyim?"<br>- "Kalorim ne durumda?"<br>- "Su hatirlatması yap"<br><br>Her sorun icin yanindayim!</div>', unsafe_allow_html=True)
     
     st.markdown("---")
     st.markdown('<div style="text-align:center;color:rgba(255,255,255,0.3);padding:30px;">(c) 2026 DiyetX - Nutri ile saglikli yasam!<br><small>Yapim: Emir Unsal Aksu</small></div>', unsafe_allow_html=True)
