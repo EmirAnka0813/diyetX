@@ -132,17 +132,32 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # === ANIMATED FOOD BACKGROUND ===
-foods = ["salad", "apple", "avocado", "carrot", "grapes", "broccoli", "egg", "meat", "fish", "tomato", "blueberry", "bread", "potato", "orange", "mango", "lemon", "nuts", "milk"]
-food_icons = {"salad":"salad","apple":"apple","avocado":"avocado","carrot":"carrot","grapes":"grapes","broccoli":"broccoli","egg":"egg","meat":"meat","fish":"fish","tomato":"tomato","blueberry":"berry","bread":"bread","potato":"potato","orange":"orange","mango":"mango","lemon":"lemon","nuts":"nuts","milk":"milk"}
+# Using food emoji with better styling
+food_icons = ["🍎","🥗","🥑","🥕","🍇","🥦","🍳","🥩","🐟","🍅","🫐","🥐","🍠","🍊","🥭","🍋","🥜","🥛"]
+
+food_images = [
+    "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=100",  # salad
+    "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=100",  # apple
+    "https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?w=100",  # avocado
+    "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=100",  # carrot
+    "https://images.unsplash.com/photo-1537640538966-79f369143f8f?w=100",  # grapes
+    "https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?w=100",  # broccoli
+    "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=100",  # egg
+    "https://images.unsplash.com/photo-1544025162-d76694265947?w=100",  # meat
+    "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=100",  # fish
+    "https://images.unsplash.com/photo-1546470427-0d4db154cce8?w=100",  # tomato
+]
 
 st.markdown('<div class="food-bg">', unsafe_allow_html=True)
 for i in range(60):
-    food_key = foods[i % len(foods)]
+    if i < len(food_images):
+        img = f'<img src="{food_images[i % len(food_images)]}" style="width:50px;height:50px;object-fit:cover;border-radius:10px;" loading="lazy">'
+    else:
+        img = food_icons[i % len(food_icons)]
     left = (i * 3) % 100
     delay = (i * 0.6) % 18
     duration = 15 + (i % 10)
-    icon = food_icons[food_key]
-    st.markdown(f'<div class="food-fall" style="left:{left}%;animation-delay:{delay:.1f}s;animation-duration:{duration}s;">{icon}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="food-fall" style="left:{left}%;animation-delay:{delay:.1f}s;animation-duration:{duration}s;">{img}</div>', unsafe_allow_html=True)
 st.markdown('</div>', unsafe_allow_html=True)
 
 # === SESSION STATES ===
@@ -339,18 +354,18 @@ elif st.session_state.step == 4:
         st.success(f"{yemek_adi} eklendi! +{yemek_kalori} kcal")
         st.rerun()
     
-    st.markdown("### Su Takibi")
+    st.markdown("### 💧 Su Takibi")
     col_s1, col_s2 = st.columns([1, 2])
     with col_s1:
         water_pct = min(st.session_state.water_count / 8, 1.0)
-        st.progress(water_pct, text=f"{st.session_state.water_count}/8 bardak")
+        st.progress(water_pct, text=f"💧 {st.session_state.water_count}/8 bardak")
         if st.button("Su Ictim!", key="water"):
             st.session_state.water_count += 1
             st.session_state.points += 10
             st.balloons()
             st.rerun()
     with col_s2:
-        st.info("Su, metabolizmayi hizlandirir ve aclik hissini azaltir!")
+        st.markdown('<div style="background:linear-gradient(135deg,rgba(0,180,216,0.2),rgba(0,150,200,0.2));border-radius:15px;padding:20px;text-align:center;"><span style="font-size:50px;">💧</span><h3 style="color:white;margin:10px 0;">Neden Su Ic Meliyiz?</h3><p style="color:rgba(255,255,255,0.7);margin:0;">Metabolizmayi hizlandirir, toksinleri atar, aclik hissini azaltir!</p></div>', unsafe_allow_html=True)
     
     st.markdown("### Adim ve Uyku")
     col_a1, col_a2 = st.columns(2)
