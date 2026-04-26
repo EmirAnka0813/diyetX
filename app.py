@@ -377,13 +377,13 @@ elif st.session_state.step == 4:
             with st.expander("🍽️ Yemek Ekle"):
                 yemek_adi = st.text_input("Yemek", placeholder="Ornek: Tavuk salatasi")
                 yemek_kalori = st.number_input("Kalori", 0, 2000, 200)
-                if st.button("Ekle", key="food_add_btn"):
+                if st.button("Ekle", key="food_quick_btn"):
                     st.session_state.calorie_today += yemek_kalori
                     st.session_state.points += 15
                     st.success(f"{yemek_adi} eklendi!")
         with col_quick2:
             with st.expander("💧 Su Ekle"):
-                if st.button("Su Ictim!", key="water"):
+                if st.button("Su Ictim!", key="water_quick_btn"):
                     st.session_state.water_count += 1
                     st.session_state.points += 10
                     st.rerun()
@@ -423,7 +423,7 @@ elif st.session_state.step == 4:
         col_y1, col_y2 = st.columns([2, 1])
         yemek_adi = col_y1.text_input("Yemek adi", placeholder="Ornek: Tavuk salatasi")
         yemek_kalori = col_y2.number_input("Kalori", 0, 2000, 200)
-        if st.button("Ekle", key="food_add_btn"):
+        if st.button("Ekle", key="food_add_btn_diet"):
             st.session_state.calorie_today += yemek_kalori
             st.session_state.points += 15
             st.success(f"{yemek_adi} eklendi!")
@@ -443,7 +443,7 @@ elif st.session_state.step == 4:
             st.progress(water_pct, text="Gunluk su hedefi")
             st.markdown("</div>", unsafe_allow_html=True)
             st.markdown("<br>", unsafe_allow_html=True)
-            if st.button("💧 Su Ictim!", key="water", use_container_width=True):
+            if st.button("💧 Su Ictim!", key="water_btn", use_container_width=True):
                 st.session_state.water_count += 1
                 st.session_state.points += 10
                 st.balloons()
