@@ -216,7 +216,7 @@ def generate_diet_plan(name, current_weight, goal_weight, activity, diet_pref):
 if st.session_state.step == 0:
     st.markdown('<nav class="navbar"><div class="logo">DiyetX</div><a href="#features" style="color:rgba(255,255,255,0.7);text-decoration:none;margin-right:20px;">Ozellikler</a><a href="#diet" style="color:rgba(255,255,255,0.7);text-decoration:none;margin-right:20px;">Diyet</a><a href="#auth" class="nav-cta">Ucretsiz Basla</a></nav>', unsafe_allow_html=True)
     
-    st.markdown('<div class="hero"><div class="hero-badge">Turkiye\'nin En Akilli Diyet Uygulamasi</div><div class="nutri-float">KEDi</div><h1 class="hero-title">Sagliginizi<br>Yapay Zeka ile<br>Yonetxin</h1><p class="hero-subtitle">Kisisel diyet listeniz, AI destekli Nutri asistaniniz ve motivasyon dolu gamifikasyon ile hedefinize ulasin!</p><div class="hero-cta-group"><a href="#auth" class="btn-primary">Hemen Basla - Ucretsiz</a><a href="#features" class="btn-secondary">Ozellikleri Gor</a></div><div class="hero-stats"><div><div class="stat-number">50K+</div><div class="stat-label">Aktif Kullanici</div></div><div><div class="stat-number">4.9</div><div class="stat-label">Uygulama Puani</div></div><div><div class="stat-number">1000+</div><div class="stat-label">Turk Yemegi</div></div></div></div>', unsafe_allow_html=True)
+    st.markdown('<div class="hero"><div class="hero-badge">Turkiye\'nin En Akilli Diyet Uygulamasi</div><div class="nutri-float">🤖</div><h1 class="hero-title">Sagliginizi<br>Yapay Zeka ile<br>Yonetxin</h1><p class="hero-subtitle">Kisisel diyet listeniz, AI destekli Nutri asistaniniz ve motivasyon dolu gamifikasyon ile hedefinize ulasin!</p><div class="hero-cta-group"><a href="#auth" class="btn-primary">Hemen Basla - Ucretsiz</a><a href="#features" class="btn-secondary">Ozellikleri Gor</a></div><div class="hero-stats"><div><div class="stat-number">50K+</div><div class="stat-label">Aktif Kullanici</div></div><div><div class="stat-number">4.9</div><div class="stat-label">Uygulama Puani</div></div><div><div class="stat-number">1000+</div><div class="stat-label">Turk Yemegi</div></div></div></div>', unsafe_allow_html=True)
     
     st.markdown('<section class="features" id="features"><div style="text-align:center;margin-bottom:80px;"><div class="section-tag">Neden DiyetX?</div><h2 class="section-title">Her Sey Sizin Icin Tasarlandi</h2><p class="section-desc">En sevdiyiniz ozellikler bir arada. Kolay, hizli ve eglenceli!</p></div><div class="features-grid"><div class="feature-card"><div class="feature-icon">ASISTAN</div><h3 class="feature-title">Nutri AI Asistan</h3><p class="feature-desc">7/24 destek veren, motivasyon salan yapay zeka asistanin.</p></div><div class="feature-card"><div class="feature-icon">LISTE</div><h3 class="feature-title">Kisisel Diyet Listesi</h3><p class="feature-desc">Hedeflerine gore olusturulan haftalik diyet listesi. Turk mutfagina ozel!</p></div><div class="feature-card"><div class="feature-icon">KAMERA</div><h3 class="feature-title">Yemek Analizi</h3><p class="feature-desc">Tabaginin fotografini cek, yapay zeka kalorini hesaplasin.</p></div><div class="feature-card"><div class="feature-icon">ROZET</div><h3 class="feature-title">Oyunlastirma</h3><p class="feature-desc">Puan topla, rozet kazan, streak tut. Kilo verme eglenceli!</p></div><div class="feature-card"><div class="feature-icon">SU</div><h3 class="feature-title">Su Takibi</h3><p class="feature-desc">Gunluk su hedefini unutma. Hatirlatgilarla!</p></div><div class="feature-card"><div class="feature-icon">SAAT</div><h3 class="feature-title">Intermittent Fasting</h3><p class="feature-desc">16:8, 18:6, 20:4... Senin icin en uygun oruc programi!</p></div></div></section>', unsafe_allow_html=True)
     
@@ -432,13 +432,28 @@ elif st.session_state.step == 4:
     
     st.markdown("### Nutri ile Konus")
     if prompt := st.text_input("Nutri'ye sor...", placeholder="Ornek: Bugun ne yemeliyim?"):
-        if any(x in prompt.lower() for x in ["yemel", "ne yem", "yemek"]):
-            st.markdown('<div class="nutri-box">Nutri: Harika! Kahvalti: Yulaf + meyve + yumurta (350 kcal)<br>Ogle: Izgara tavuk + salata (450 kcal)<br>Aksam: Firin da somon + sebze (400 kcal)<br>Arada 2 bardak su!</div>', unsafe_allow_html=True)
-        elif "su" in prompt.lower():
+        prompt_lower = prompt.lower()
+        
+        # Yemek degisikligi onerlri
+        if any(x in prompt_lower for x in ["degistir", "farkli", "baska", "yerine", " alternatif"]):
+            st.markdown('<div class="nutri-box">Nutri: Tabii! Iste birkac secenek:<br><br><b>Pilav yerine:</b> Bulgur pilavi, tam bugday ekmek, patates<br><br><b>Tavuk yerine:</b> balik, tofu, yumurta, kirmizi et<br><br><b>Meyve yerine:</b> kuruyemis, yogut, peynir<br><br><b>Hangisini tercih edersin?</b></div>', unsafe_allow_html=True)
+        
+        # Soru-cevap formatinda
+        elif any(x in prompt_lower for x in ["yiyebilir", "yiyebilir miyim", "yebilir miyim", "mide"]):
+            st.markdown('<div class="nutri-box">Nutri: Harika soru! Bu besinler hafif ve saglikli:<br><br> YESIL Yiyebilirsin: Salata, meyve, tavuk gögusun, yumurta<br><br> SARI Dikkat et: Pilav, makarna, ekmek (porsiyon kontrolu)<br><br> KIRMIZI Kac-in: Islenmis gidalar, sekerli icecekler<br><br>Sana göre bir öneri istemis miydin?</div>', unsafe_allow_html=True)
+        
+        elif any(x in prompt_lower for x in ["ne yemel", "yemel", "menu", "liste"]):
+            st.markdown('<div class="nutri-box">Nutri: Tabii! Iste bir örnek menü:<br><br><b>Kahvalti:</b> Yulaf + meyve + yumurta (350 kcal)<br><b>Ogle:</b> Izgara balik + salata (400 kcal)<br><b>Aksam:</b> Sebze çorbasi + et (350 kcal)<br><b>Atistirma:</b> Bir avuç badem (150 kcal)<br><br><b>Toplam: ~1250 kcal</b> - Günlük hedefinin altinda kalirsin!</div>', unsafe_allow_html=True)
+        
+        elif "su" in prompt_lower:
             kalan = 8 - st.session_state.water_count
-            st.markdown('<div class="nutri-box">Su cok onemli! Suan ' + str(st.session_state.water_count) + '/8 bardak. ' + str(kalan) + ' bardak daha ic!</div>', unsafe_allow_html=True)
+            st.markdown('<div class="nutri-box">Su cok onemli! Suan ' + str(st.session_state.water_count) + '/8 bardak. ' + str(kalan) + ' bardak daha ic!<br><br><b>Su artirma ipuclari:</b><br>- Her öğünden önce 1 bardak<br>- Aroma kat: limon, nane<br>- Su sisemiz yaninda tasi!</div>', unsafe_allow_html=True)
+        
+        elif "kalori" in prompt_lower:
+            st.markdown('<div class="nutri-box">Nutri: Günlük kaloriniz:<br><br><b>Yogunla:</b> ' + str(st.session_state.calorie_today) + ' kcal<br><b>Hedef:</b> 2000 kcal<br><b>Kalan:</b> ' + str(max(0, 2000 - st.session_state.calorie_today)) + ' kcal<br><br>' + ('Harika gidiyorsun!' if st.session_state.calorie_today < 2000 else 'Dikkat! Hedefi astin!') + '</div>', unsafe_allow_html=True)
+        
         else:
-            st.markdown('<div class="nutri-box">Nutri: Harika soru! Sana yardimci olmak icin buradayim!</div>', unsafe_allow_html=True)
+            st.markdown('<div class="nutri-box">Nutri: Harika soru! Sana yardimci olmak icin buradayim.<br><br>Bana sorabilirsin:<br>- Bugun ne yemeliyim?<br>- [X] yerine ne yiyebilirim?<br>- Bana farkli bir menu ver<br>- Kalorim ne durumda?<br><br>Ne sormak istersin?</div>', unsafe_allow_html=True)
     
     st.markdown("---")
     st.markdown('<div style="text-align:center;color:rgba(255,255,255,0.3);padding:30px;">(c) 2026 DiyetX - Nutri ile saglikli yasam!<br><small>Yapim: Emir Unsal Aksu</small></div>', unsafe_allow_html=True)
