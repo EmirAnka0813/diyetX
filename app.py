@@ -24,7 +24,7 @@ st.markdown(""""
 <meta charset="UTF-8">
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 * { font-family: 'Inter', sans-serif; }
-.stApp { background: #000000; color: white; min-height: 100vh; overflow-x: hidden; }
+.stApp { background: #000000; color: white; min-height: 100vh; overflow-x: hidden; overflow-y: auto; }
 
 /* Animated Food Background */
 .food-bg {
@@ -101,7 +101,11 @@ st.markdown(""""
 .diet-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
 .diet-day { font-size: 14px; color: #ff9a56; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; }
 .diet-cal { background: linear-gradient(135deg, #ff9a56, #e040fb); padding: 5px 15px; border-radius: 20px; font-size: 14px; color: white; }
-.meal-item { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.meal-item { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.05); flex-wrap: wrap; word-wrap: break-word; overflow-wrap: break-word; }
+.meal-info { flex: 1; min-width: 0; }
+.meal-info h4 { margin: 0 0 5px 0; word-wrap: break-word; }
+.meal-info p { margin: 0; color: rgba(255,255,255,0.7); word-wrap: break-word; max-width: 100%; }
+.meal-macros { display: flex; gap: 10px; flex-shrink: 0; flex-wrap: wrap; }
 .meal-info h4 { font-size: 18px; margin-bottom: 5px; color: #fff; }
 .meal-info p { color: rgba(255,255,255,0.5); font-size: 14px; }
 .meal-macros { text-align: right; color: #e040fb; font-size: 13px; }
