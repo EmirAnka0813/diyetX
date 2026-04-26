@@ -379,7 +379,7 @@ elif st.session_state.step == 4:
         col_quick1, col_quick2 = st.columns(2)
         with col_quick1:
             with st.expander("🍽️ Yemek Ekle"):
-                yemek_adi = st.text_input("Yemek", placeholder="Ornek: Tavuk salatasi")
+                yemek_adi = st.text_input("Yemek adi", key="yemek_adi_input", placeholder="Ornek: Tavuk salatasi")
                 yemek_kalori = st.number_input("Kalori", 0, 2000, 200)
                 if st.button("Ekle", key="food_quick_btn"):
                     st.session_state.calorie_today += yemek_kalori
@@ -425,7 +425,7 @@ elif st.session_state.step == 4:
         
         st.markdown("<h3 style='color:#e040fb;'>Yemek Ekle</h3>", unsafe_allow_html=True)
         col_y1, col_y2 = st.columns([2, 1])
-        yemek_adi = col_y1.text_input("Yemek adi", placeholder="Ornek: Tavuk salatasi")
+        yemek_adi = col_y1.text_input("Yemek adi", key="yemek_adi_diet", placeholder="Ornek: Tavuk salatasi")
         yemek_kalori = col_y2.number_input("Kalori", 0, 2000, 200)
         if st.button("Ekle", key="food_add_btn_diet"):
             st.session_state.calorie_today += yemek_kalori
