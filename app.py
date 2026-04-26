@@ -834,15 +834,16 @@ elif st.session_state.step == 4:
             </div>
             """, unsafe_allow_html=True)
         elif "kilo" in prompt.lower() or "hedef" in prompt.lower():
-            st.markdown(f"""
+            kalan_kilo = st.session_state.current_weight - st.session_state.goal_weight
+            st.markdown("""
             <div class='nutri-box'>
                 <b>🐱 Nutri:</b> "{} hedefine ulaşacağız! 🎯
-                Mevcut kilo: {st.session_state.current_weight} kg
-                Hedef kilo: {st.session_state.goal_weight} kg
-                Kalan: {st.session_state.current_weight - st.session_state.goal_weight} kg
+                Mevcut kilo: {} kg
+                Hedef kilo: {} kg
+                Kalan: {} kg
                 Bunu başaracağız! 💪"
             </div>
-            """, unsafe_allow_html=True)
+            """.format(st.session_state.user_name, st.session_state.current_weight, st.session_state.goal_weight, kalan_kilo), unsafe_allow_html=True)
         else:
             st.markdown("""
             <div class='nutri-box'>
