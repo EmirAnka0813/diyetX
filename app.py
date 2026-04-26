@@ -251,7 +251,7 @@ if st.session_state.step == 0:
         st.markdown('<div class="auth-box"><h3 class="auth-title">Giris Yap</h3>', unsafe_allow_html=True)
         login_email = st.text_input("Email", placeholder="email@ornek.com", key="login_email", label_visibility="collapsed")
         login_password = st.text_input("Sifre", type="password", placeholder="Sifreni gir", key="login_pass", label_visibility="collapsed")
-        if st.button("Giris Yap", use_container_width=True):
+        if st.button("Giris Yap", key="login_btn", use_container_width=True):
             if login_email and login_password:
                 if "@" in login_email and len(login_password) >= 6:
                     st.session_state.logged_in = True
@@ -271,7 +271,7 @@ if st.session_state.step == 0:
         reg_email = st.text_input("Email", placeholder="email@ornek.com", key="reg_email", label_visibility="collapsed")
         reg_password = st.text_input("Sifre", type="password", placeholder="En az 6 karakter", key="reg_pass", label_visibility="collapsed")
         reg_password2 = st.text_input("Sifre Tekrar", type="password", placeholder="Tekrar gir", key="reg_pass2", label_visibility="collapsed")
-        if st.button("Kayit Ol", use_container_width=True):
+        if st.button("Kayit Ol", key="register_btn", use_container_width=True):
             if reg_name and reg_email and reg_password and reg_password2:
                 if "@" in reg_email:
                     if reg_password == reg_password2:
@@ -311,7 +311,7 @@ elif st.session_state.step == 3:
     
     st.markdown("<br><br>", unsafe_allow_html=True)
     
-    if st.button("Diyet Listemi Olustur!", use_container_width=True):
+    if st.button("Diyet Listemi Olustur!", key="create_diet_btn", use_container_width=True):
         st.session_state.diet_plan = generate_diet_plan(
             st.session_state.user_name, st.session_state.current_weight,
             st.session_state.goal_weight, st.session_state.activity, st.session_state.diet_pref
@@ -379,7 +379,7 @@ elif st.session_state.step == 4:
     yemek_carbs = col_m2.number_input("Karbonhidrat (g)", 0, 300, 25)
     yemek_fat = col_m3.number_input("Yag (g)", 0, 100, 10)
     emoji_map = "YESIL" if yemek_kalori < 150 else "SARI" if yemek_kalori < 350 else "KIRMIZI"
-    if st.button(f"Ekle {emoji_map}"):
+    if st.button(f"Ekle {emoji_map}", key="food_add_btn"):
         st.session_state.calorie_today += yemek_kalori
         st.session_state.protein += yemek_protein
         st.session_state.carbs += yemek_carbs
@@ -425,7 +425,7 @@ elif st.session_state.step == 4:
     with col_f1:
         fasting_plan = st.selectbox("Plan", ["Sec", "16:8", "18:6", "20:4", "5:2"])
         if not st.session_state.fasting_active:
-            if st.button("Oruc Baslat"):
+            if st.button("Oruc Baslat", key="fast_start_btn"):
                 st.session_state.fasting_active = True
                 st.session_state.fasting_start = datetime.now()
                 st.success("Oruc basladi!")
@@ -434,7 +434,7 @@ elif st.session_state.step == 4:
             elapsed = (datetime.now() - st.session_state.fasting_start).seconds
             hours, minutes = elapsed // 3600, (elapsed % 3600) // 60
             st.markdown(f"### {hours}s {minutes}dk")
-            if st.button("Bitir"):
+            if st.button("Bitir", key="fast_end_btn"):
                 st.session_state.fasting_active = False
                 st.session_state.points += 50
                 if "Oruc Tamamlandi" not in st.session_state.badges:
