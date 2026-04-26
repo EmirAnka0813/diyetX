@@ -391,160 +391,183 @@ elif st.session_state.step == 4:
     # Diyet Listesi
     elif selected_menu == "Diyet Listesi":
         st.markdown("<h1 style='color:#e040fb;text-shadow:0 0 10px #e040fb;'>🍽️ Haftalik Diyet Listesi</h1>", unsafe_allow_html=True)
-    
-    if st.session_state.diet_plan:
-        days = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"]
-        today = days[datetime.now().weekday()]
         
-        # Bugunku gunu vurgula
-        col_nav1, col_nav2 = st.columns([1, 3])
-        with col_nav1:
-            if st.button("BUGUN", key="bugun_btn"):
-                st.session_state.selected_day = today
-            selected_day = st.session_state.get("selected_day", today)
-            if selected_day not in days:
-                selected_day = today
-            selected_day = st.selectbox("Gun sec", days, index=days.index(selected_day) if selected_day in days else 0)
-        with col_nav2:
-            st.markdown("<small style='color:#e040fb;'>Haftanin gunlerini gor ve kendi diet planina gore yemeklerini sec!</small>", unsafe_allow_html=True)
-        
-        if selected_day in st.session_state.diet_plan:
-            day_meals = st.session_state.diet_plan[selected_day]
-            total_cal = sum(m[1] for m in day_meals)
-            meal_names = ["Kahvalt&#305; (08:00)", "&#214;&#287;le (12:30)", "Ak&#351;am (19:00)", "At&#305;&#351;t&#305;rma (15:00)"]
+        if st.session_state.diet_plan:
+            days = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"]
+            today = days[datetime.now().weekday()]
             
-            diet_html = '<div class="diet-card" style="padding:30px;"><div class="diet-header"><span class="diet-day">' + selected_day + '</span><span class="diet-cal">' + str(total_cal) + ' kcal</span></div>'
-            st.markdown(diet_html, unsafe_allow_html=True)
+            col_nav1, col_nav2 = st.columns([1, 3])
+            with col_nav1:
+                if st.button("BUGUN", key="bugun_btn"):
+                    st.session_state.selected_day = today
+                selected_day = st.session_state.get("selected_day", today)
+                if selected_day not in days:
+                    selected_day = today
+                selected_day = st.selectbox("Gun sec", days, index=days.index(selected_day) if selected_day in days else 0)
+            with col_nav2:
+                st.markdown("<small style='color:#e040fb;'>Haftanin gunlerini gor!</small>", unsafe_allow_html=True)
             
-            for i, meal_data in enumerate(day_meals):
-                meal_food, meal_cal, meal_prot, meal_carb, meal_fat = meal_data
-                color = "#27ae60" if meal_cal < 200 else "#f39c12" if meal_cal < 400 else "#e74c3c"
+            if selected_day in st.session_state.diet_plan:
+                day_meals = st.session_state.diet_plan[selected_day]
+                total_cal = sum(m[1] for m in day_meals)
+                meal_names = ["Kahvalt&#305; (08:00)", "&#214;&#287;le (12:30)", "At&#305;&#351;t&#305;rma (15:00)", "Ak&#351;am (19:00)"]
                 
-                st.markdown('<div class="meal-item"><div class="meal-info"><h4>' + meal_names[i] + '</h4><p>' + meal_food + '</p></div><div class="meal-macros"><span style="color:' + color + '">' + str(meal_cal) + ' kcal</span><span>' + str(meal_prot) + 'g P</span><span>' + str(meal_carb) + 'g K</span><span>' + str(meal_fat) + 'g Y</span></div></div>', unsafe_allow_html=True)
-            
+                st.markdown(f"<div style='background:linear-gradient(135deg,#1a1a2e,#0a0a15);padding:25px;border-radius:15px;border:1px solid rgba(224,64,251,0.3);margin:20px 0;'><div style='display:flex;justify-content:space-between;align-items:center;'><span style='font-size:24px;color:#e040fb;'>{selected_day}</span><span style='font-size:20px;color:#27ae60;'>{total_cal} kcal</span></div></div>", unsafe_allow_html=True)
+                
+                for i, meal_data in enumerate(day_meals):
+                    meal_food, meal_cal, meal_prot, meal_carb, meal_fat = meal_data
+                    color = "#27ae60" if meal_cal < 200 else "#f39c12" if meal_cal < 400 else "#e74c3c"
+                    st.markdown(f"<div style='background:rgba(255,255,255,0.05);padding:15px;border-radius:10px;margin:10px 0;border-left:3px solid {color};'><div style='font-size:16px;color:white;'>{meal_names[i]}</div><div style='color:rgba(255,255,255,0.7);'>{meal_food}</div><div style='margin-top:8px;'><span style='color:{color};font-weight:bold;'>{meal_cal} kcal</span> <span style='color:rgba(255,255,255,0.5);'>|</span> <span style='color:#00ffff;'>{meal_prot}g P</span> <span style='color:rgba(255,255,255,0.5);'>|</span> <span style='color:#ff9a56;'>{meal_carb}g K</span></div></div>", unsafe_allow_html=True)
+        
+        st.markdown("<h3 style='color:#e040fb;'>Yemek Ekle</h3>", unsafe_allow_html=True)
+        col_y1, col_y2 = st.columns([2, 1])
+        yemek_adi = col_y1.text_input("Yemek adi", placeholder="Ornek: Tavuk salatasi")
+        yemek_kalori = col_y2.number_input("Kalori", 0, 2000, 200)
+        if st.button("Ekle", key="food_add_btn"):
+            st.session_state.calorie_today += yemek_kalori
+            st.session_state.points += 15
+            st.success(f"{yemek_adi} eklendi!")
+            st.rerun()
+    
+    # Su Takibi
+    elif selected_menu == "Su Takibi":
+        st.markdown("<h1 style='color:#e040fb;text-shadow:0 0 10px #e040fb;'>💧 Su Takibi</h1>", unsafe_allow_html=True)
+        
+        col_s1, col_s2 = st.columns([1, 1])
+        with col_s1:
+            water_pct = min(st.session_state.water_count / 8, 1.0)
+            st.markdown(f"<div style='background:linear-gradient(135deg,#1a1a2e,#0a0a15);padding:30px;border-radius:15px;text-align:center;border:1px solid rgba(0,150,200,0.3);'>", unsafe_allow_html=True)
+            st.markdown(f"<div style='font-size:80px;color:#0096c8;'>{st.session_state.water_count}</div>", unsafe_allow_html=True)
+            st.markdown(f"<div style='font-size:20px;color:rgba(255,255,255,0.6);'> / 8 Bardak</div>", unsafe_allow_html=True)
+            st.markdown("<br>", unsafe_allow_html=True)
+            st.progress(water_pct, text="Gunluk su hedefi")
             st.markdown("</div>", unsafe_allow_html=True)
-    
-    st.markdown("### Yemek Ekle")
-    col_y1, col_y2 = st.columns([2, 1])
-    yemek_adi = col_y1.text_input("Yemek", placeholder="Ornek: Tavuk salatasi")
-    yemek_kalori = col_y2.number_input("Kalori", 0, 2000, 200)
-    col_m1, col_m2, col_m3 = st.columns(3)
-    yemek_protein = col_m1.number_input("Protein (g)", 0, 200, 20)
-    yemek_carbs = col_m2.number_input("Karbonhidrat (g)", 0, 300, 25)
-    yemek_fat = col_m3.number_input("Yag (g)", 0, 100, 10)
-    emoji_map = "YESIL" if yemek_kalori < 150 else "SARI" if yemek_kalori < 350 else "KIRMIZI"
-    if st.button(f"Ekle {emoji_map}", key="food_add_btn"):
-        st.session_state.calorie_today += yemek_kalori
-        st.session_state.protein += yemek_protein
-        st.session_state.carbs += yemek_carbs
-        st.session_state.fat += yemek_fat
-        st.session_state.points += 15
-        st.success(f"{yemek_adi} eklendi! +{yemek_kalori} kcal")
-        st.rerun()
-    
-    st.markdown("### 💧 Su Takibi")
-    col_s1, col_s2 = st.columns([1, 2])
-    with col_s1:
-        water_pct = min(st.session_state.water_count / 8, 1.0)
-        st.progress(water_pct, text=f"💧 {st.session_state.water_count}/8 bardak")
-        if st.button("Su Ictim!", key="water"):
-            st.session_state.water_count += 1
-            st.session_state.points += 10
-            st.balloons()
-            st.rerun()
-    with col_s2:
-        st.markdown('<div style="background:linear-gradient(135deg,rgba(0,180,216,0.2),rgba(0,150,200,0.2));border-radius:15px;padding:20px;text-align:center;"><span style="font-size:50px;">💧</span><h3 style="color:white;margin:10px 0;">Neden Su Ic Meliyiz?</h3><p style="color:rgba(255,255,255,0.7);margin:0;">Metabolizmayi hizlandirir, toksinleri atar, aclik hissini azaltir!</p></div>', unsafe_allow_html=True)
-    
-    st.markdown("### Adim ve Uyku")
-    col_a1, col_a2 = st.columns(2)
-    with col_a1:
-        st.metric("Bugunku Adim", f"{st.session_state.steps}", "adim")
-        new_steps = st.number_input("Adim ekle", 0, 50000, 1000, key="steps")
-        if st.button("Adim Ekle", key="steps_add_btn"):
-            st.session_state.steps += new_steps
-            st.session_state.points += 5
-            st.rerun()
-    with col_a2:
-        st.metric("Uyku", f"{st.session_state.sleep_hours}h", "saat")
-        new_sleep = st.slider("Uyku", 0, 12, 7, key="sleep")
-        if st.button("Uyku Kaydet", key="sleep_save_btn"):
-            st.session_state.sleep_hours = new_sleep
-            if new_sleep >= 7 and "IyI Uyku" not in st.session_state.badges:
-                st.session_state.badges.append("IyI Uyku")
-                st.session_state.points += 20
-            st.rerun()
-    
-    st.markdown("### Intermittent Fasting")
-    col_f1, col_f2 = st.columns(2)
-    with col_f1:
-        fasting_plan = st.selectbox("Plan", ["Sec", "16:8", "18:6", "20:4", "5:2"])
-        if not st.session_state.fasting_active:
-            if st.button("Oruc Baslat", key="fast_start_btn"):
-                st.session_state.fasting_active = True
-                st.session_state.fasting_start = datetime.now()
-                st.success("Oruc basladi!")
+            st.markdown("<br>", unsafe_allow_html=True)
+            if st.button("💧 Su Ictim!", key="water", use_container_width=True):
+                st.session_state.water_count += 1
+                st.session_state.points += 10
+                st.balloons()
                 st.rerun()
-        else:
-            elapsed = (datetime.now() - st.session_state.fasting_start).seconds
-            hours, minutes = elapsed // 3600, (elapsed % 3600) // 60
-            st.markdown(f"### {hours}s {minutes}dk")
-            if st.button("Bitir", key="fast_end_btn"):
-                st.session_state.fasting_active = False
-                st.session_state.points += 50
-                if "Oruc Tamamlandi" not in st.session_state.badges:
-                    st.session_state.badges.append("Oruc Tamamlandi")
-                st.success("Oruc tamamlandi! +50 puan")
+        
+        with col_s2:
+            st.markdown("<h3 style='color:#e040fb;'>Neden Su Ic Meliyiz?</h3>", unsafe_allow_html=True)
+            st.markdown("• Metabolizmayi hizlandirir", unsafe_allow_html=True)
+            st.markdown("• Toksinleri atar", unsafe_allow_html=True)
+            st.markdown("• Aclik hissini azaltir", unsafe_allow_html=True)
+            st.markdown("• Enerjiyi artirir", unsafe_allow_html=True)
+            st.markdown("<br>", unsafe_allow_html=True)
+            st.markdown("<h4 style='color:#00ffff;'>Ipucu:</h4>", unsafe_allow_html=True)
+            st.markdown("Her oglen oncesi 1 bardak su icin!", unsafe_allow_html=True)
+    
+    # Adim & Uyku
+    elif selected_menu == "Adim & Uyku":
+        st.markdown("<h1 style='color:#e040fb;text-shadow:0 0 10px #e040fb;'>👟 Adim & Uyku</h1>", unsafe_allow_html=True)
+        
+        col_a1, col_a2 = st.columns(2)
+        with col_a1:
+            st.markdown(f"<div style='background:linear-gradient(135deg,#1a1a2e,#0a0a15);padding:30px;border-radius:15px;text-align:center;border:1px solid rgba(255,154,86,0.3);'>", unsafe_allow_html=True)
+            st.markdown("<div style='font-size:14px;color:rgba(255,255,255,0.6);'>BUGUNKI ADIM</div>", unsafe_allow_html=True)
+            st.markdown(f"<div style='font-size:60px;color:#ff9a56;'>{st.session_state.steps}</div>", unsafe_allow_html=True)
+            st.markdown("<div style='color:rgba(255,255,255,0.5);'>adim</div>", unsafe_allow_html=True)
+            st.markdown("</div>", unsafe_allow_html=True)
+            new_steps = st.number_input("Adim ekle", 0, 50000, 1000, key="steps")
+            if st.button("Adim Ekle", key="steps_add_btn", use_container_width=True):
+                st.session_state.steps += new_steps
+                st.session_state.points += 5
                 st.rerun()
-    with col_f2:
-        st.markdown("#### Hatirlatmalar")
-        for r in st.session_state.meal_reminders:
-            st.write(f"- {r}")
-        new_r = st.text_input("Yeni hatirlatma", key="reminder")
-        if st.button("Hatirlati Ekle", key="reminder_add_btn") and new_r:
-            st.session_state.meal_reminders.append(new_r)
-            st.rerun()
+        
+        with col_a2:
+            st.markdown(f"<div style='background:linear-gradient(135deg,#1a1a2e,#0a0a15);padding:30px;border-radius:15px;text-align:center;border:1px solid rgba(0,255,255,0.3);'>", unsafe_allow_html=True)
+            st.markdown("<div style='font-size:14px;color:rgba(255,255,255,0.6);'>UYKU</div>", unsafe_allow_html=True)
+            st.markdown(f"<div style='font-size:60px;color:#00ffff;'>{st.session_state.sleep_hours}h</div>", unsafe_allow_html=True)
+            st.markdown("<div style='color:rgba(255,255,255,0.5);'>saat</div>", unsafe_allow_html=True)
+            st.markdown("</div>", unsafe_allow_html=True)
+            new_sleep = st.slider("Uyku suresi", 0, 12, 7, key="sleep")
+            if st.button("Uyku Kaydet", key="sleep_save_btn", use_container_width=True):
+                st.session_state.sleep_hours = new_sleep
+                if new_sleep >= 7 and "IyI Uyku" not in st.session_state.badges:
+                    st.session_state.badges.append("IyI Uyku")
+                    st.session_state.points += 20
+                st.rerun()
     
-    st.markdown("### Duygusal Yeme Gunlugu")
-    col_e1, col_e2 = st.columns(2)
-    with col_e1:
-        mood = st.selectbox("Ruh halin?", ["Mutlu", "Uzgun", "Stresli", "Sikilmis", "Yorgun", "Endiseseli"], key="mood")
-        if st.button("Duygu Kaydet", key="emotion_save_btn"):
-            st.session_state.emotional_log.append({"tarih": datetime.now().strftime("%d.%m.%Y %H:%M"), "ruh": mood, "kalori": st.session_state.calorie_today})
-            st.session_state.points += 5
-            st.success("Kaydedildi!")
-    with col_e2:
-        if st.session_state.emotional_log:
-            for log in st.session_state.emotional_log[-5:]:
-                emoji_m = ":)" if log["ruh"] == "Mutlu" else ":(" if log["ruh"] == "Uzgun" else ":o"
-                st.write(f"{emoji_m} {log['tarih']} - {log['ruh']} ({log['kalori']} kcal)")
+    # Orucluk
+    elif selected_menu == "Orucluk":
+        st.markdown("<h1 style='color:#e040fb;text-shadow:0 0 10px #e040fb;'>⏰ Intermittent Fasting</h1>", unsafe_allow_html=True)
+        
+        col_f1, col_f2 = st.columns(2)
+        with col_f1:
+            fasting_plan = st.selectbox("Plan sec", ["16:8", "18:6", "20:4", "5:2"])
+            if not st.session_state.fasting_active:
+                st.markdown(f"<div style='background:linear-gradient(135deg,#1a1a2e,#0a0a15);padding:30px;border-radius:15px;text-align:center;border:1px solid rgba(224,64,251,0.3);'>", unsafe_allow_html=True)
+                st.markdown("<div style='font-size:50px;'>⏰</div>", unsafe_allow_html=True)
+                st.markdown("<div style='color:rgba(255,255,255,0.6);'>Aktif oruc yok</div>", unsafe_allow_html=True)
+                st.markdown("</div>", unsafe_allow_html=True)
+                st.markdown("<br>", unsafe_allow_html=True)
+                if st.button("Oruc Baslat", key="fast_start_btn", use_container_width=True):
+                    st.session_state.fasting_active = True
+                    st.session_state.fasting_start = datetime.now()
+                    st.success("Oruc basladi!")
+                    st.rerun()
+            else:
+                elapsed = (datetime.now() - st.session_state.fasting_start).seconds
+                hours, minutes = elapsed // 3600, (elapsed % 3600) // 60
+                st.markdown(f"<div style='background:linear-gradient(135deg,#1a1a2e,#0a0a15);padding:30px;border-radius:15px;text-align:center;border:1px solid rgba(39,174,96,0.3);'>", unsafe_allow_html=True)
+                st.markdown(f"<div style='font-size:60px;color:#27ae60;'>{hours}s {minutes}dk</div>", unsafe_allow_html=True)
+                st.markdown("<div style='color:rgba(255,255,255,0.6);'>Oruc suresi</div>", unsafe_allow_html=True)
+                st.markdown("</div>", unsafe_allow_html=True)
+                st.markdown("<br>", unsafe_allow_html=True)
+                if st.button("Bitir", key="fast_end_btn", use_container_width=True):
+                    st.session_state.fasting_active = False
+                    st.session_state.points += 50
+                    if "Oruc Tamamlandi" not in st.session_state.badges:
+                        st.session_state.badges.append("Oruc Tamamlandi")
+                    st.success("Oruc tamamlandi! +50 puan")
+                    st.rerun()
+        
+        with col_f2:
+            st.markdown("<h3 style='color:#e040fb;'>Hatirlatmalar</h3>", unsafe_allow_html=True)
+            for r in st.session_state.meal_reminders:
+                st.markdown(f"- {r}", unsafe_allow_html=True)
+            new_r = st.text_input("Yeni hatirlatma", key="reminder")
+            if st.button("Ekle", key="reminder_add_btn") and new_r:
+                st.session_state.meal_reminders.append(new_r)
+                st.rerun()
     
-    st.markdown("### Nutri ile Konus")
-    if prompt := st.text_input("Nutri'ye sor...", placeholder="Ornek: Pilav yerine ne yiyebilirim?"):
-        prompt_lower = prompt.lower()
+    # Duygusal Yeme
+    elif selected_menu == "Duygusal Yeme":
+        st.markdown("<h1 style='color:#e040fb;text-shadow:0 0 10px #e040fb;'>😊 Duygusal Yeme Gunlugu</h1>", unsafe_allow_html=True)
         
-        # Yemek degisikligi onerlri - DENGELI CEVAP
-        if any(x in prompt_lower for x in ["degistir", "farkli", "baska", "yerine", " alternatif"]):
-            st.markdown('<div class="nutri-box">Nutri: Tabii! Diyet listenize uygun alternatifler:<br><br><b>Pilav yerine:</b><br>- Bulgur pilavi (ayni kaloride, daha fazla lif)<br>- Tam bugday ekmek (biraz daha az kalorili)<br>- Patates püresi (nadir kullanilir, dikkat)<br><br><b>Tavuk yerine:</b><br>- Balik (daha az kalorili, omega-3!)<br>- Yumurta (aynı protein, daha ucuz)<br>- Tofu (vejetaryen secenegi)<br><br><b>Meyve yerine:</b><br>- Kuruyemis (daha kalorili, porsiyon kontrolu!)<br>- Yogurt (protein deposu!)<br>- Peynir (kalorili ama kalsiyum!</div>', unsafe_allow_html=True)
+        col_e1, col_e2 = st.columns(2)
+        with col_e1:
+            mood = st.selectbox("Ruh halin?", ["Mutlu", "Uzgun", "Stresli", "Sikilmis", "Yorgun", "Endiseseli"], key="mood")
+            if st.button("Kaydet", key="emotion_save_btn", use_container_width=True):
+                st.session_state.emotional_log.append({"tarih": datetime.now().strftime("%d.%m.%Y %H:%M"), "ruh": mood, "kalori": st.session_state.calorie_today})
+                st.session_state.points += 5
+                st.success("Kaydedildi!")
+                st.rerun()
         
-        # Soru-cevap formatinda - DENGELI
-        elif any(x in prompt_lower for x in ["yiyebilir", "yiyebilir miyim", "yebilir miyim", "mide"]):
-            st.markdown('<div class="nutri-box">Nutri: Bu besinler hakkinda bilgi:<br><br> YESIL Olur: Salata, meyve, tavuk gögusun, yumurta, sebze<br><br> SARI Dikkat: Pilav, makarna, ekmek (porsiyon kontrolu lazim!)<br><br> KIRMIZI Kacin: Kizarik et, islenmis gidalar, sekerli icecekler<br><br>Her besin diyet planina uygun miktarda tukenebilir!</div>', unsafe_allow_html=True)
-        
-        elif any(x in prompt_lower for x in ["ne yemel", "yemel", "menu", "liste"]):
-            st.markdown('<div class="nutri-box">Nutri: Diyet listenize tam uygun menü:<br><br><b>Kahvalti:</b> Yulaf + meyve + yumurta (350 kcal)<br><b>Ogle:</b> Izgara balik + salata (400 kcal)<br><b>Aksam:</b> Sebze Corbasi + et (350 kcal)<br><b>Atistirma:</b> Bir avuc badem (150 kcal)<br><br><b>Toplam: ~1250 kcal</b> - Günlük hedefinin altinda kalirsin!</div>', unsafe_allow_html=True)
-        
-        elif "su" in prompt_lower:
-            kalan = 8 - st.session_state.water_count
-            st.markdown('<div class="nutri-box">Su cok onemli! Suan ' + str(st.session_state.water_count) + '/8 bardak. ' + str(kalan) + ' bardak daha ic!<br><br><b>Su artirma ipuclari:</b><br>- Her öğünden önce 1 bardak su<br>- L limon veya nane ekle tatlandir<br>- Yaninda bir su sisemiz tasi!</div>', unsafe_allow_html=True)
-        
-        elif "kalori" in prompt_lower:
-            st.markdown('<div class="nutri-box">Nutri: Günlük kaloriniz:<br><br><b>Yogunla:</b> ' + str(st.session_state.calorie_today) + ' kcal<br><b>Hedef:</b> 2000 kcal<br><b>Kalan:</b> ' + str(max(0, 2000 - st.session_state.calorie_today)) + ' kcal<br><br>' + ('Harika gidiyorsun, hedefe yakinsin!' if st.session_state.calorie_today < 2000 else 'Dikkat! Hedefi astin ama hemen panik yok, yarin daha dikkatli ol!') + '</div>', unsafe_allow_html=True)
-        
-        elif "diyet" in prompt_lower or "plan" in prompt_lower:
-            st.markdown('<div class="nutri-box">Nutri: Senin icin hazirlanan haftalik diyet listesi var!<br><br>Günleri yukaridan sec ve her öğünü gör.<br><br>Listen dışında bir sey yemek istersen, bana sor - alternatif önereyim!<br><br>Birlikte basaracagiz!</div>', unsafe_allow_html=True)
-        
-        else:
-            st.markdown('<div class="nutri-box">Nutri: Merhaba! Sana yardimci olmak icin buradayim.<br><br>Sor bana:<br>- "Pilav yerine ne yiyebilirim?"<br>- "Bugun ne yemeliyim?"<br>- "Kalorim ne durumda?"<br>- "Su hatirlatması yap"<br><br>Her sorun icin yanindayim!</div>', unsafe_allow_html=True)
+        with col_e2:
+            if st.session_state.emotional_log:
+                st.markdown("<h4 style='color:#e040fb;'>Son Kayitlar</h4>", unsafe_allow_html=True)
+                for log in st.session_state.emotional_log[-5:]:
+                    emoji_m = ":)" if log["ruh"] == "Mutlu" else ":(" if log["ruh"] == "Uzgun" else ":o"
+                    st.markdown(f"{emoji_m} {log['tarih']} - {log['ruh']} ({log['kalori']} kcal)", unsafe_allow_html=True)
     
-    st.markdown("---")
-    st.markdown('<div style="text-align:center;color:rgba(255,255,255,0.3);padding:30px;">(c) 2026 DiyetX - Nutri ile saglikli yasam!<br><small>Yapim: Emir Unsal Aksu</small></div>', unsafe_allow_html=True)
+    # Nutri Asistan
+    elif selected_menu == "Nutri Asistan":
+        st.markdown("<h1 style='color:#e040fb;text-shadow:0 0 10px #e040fb;'>💬 Nutri Asistan</h1>", unsafe_allow_html=True)
+        
+        st.markdown(f"<div style='background:linear-gradient(135deg,rgba(224,64,251,0.15),rgba(0,255,255,0.15));padding:20px;border-radius:15px;border:1px solid rgba(224,64,251,0.3);margin-bottom:20px;'><span style='font-size:20px;'>🐱</span> <b style='color:#e040fb;'>Nutri:</b> Merhaba! Sana yardimci olmak icin buradayim. Sor bana yemek degisikligi veya kalori sor!</div>", unsafe_allow_html=True)
+        
+        if prompt := st.text_input("Nutri'ye sor...", placeholder="Ornek: Pilav yerine ne yiyebilirim?"):
+            prompt_lower = prompt.lower()
+            
+            if any(x in prompt_lower for x in ["degistir", "farkli", "baska", "yerine", " alternatif"]):
+                st.markdown('<div class="nutri-box">Pilav yerine: Bulgur pilavi, Tam bugday ekmek, Patates pure (nadir)<br>Tavuk yerine: Balik, Yumurta, Tofu<br>Meyve yerine: Kuruyemis (dikkat!), Yogurt, Peynir</div>', unsafe_allow_html=True)
+            elif "su" in prompt_lower:
+                kalan = 8 - st.session_state.water_count
+                st.markdown(f'<div class="nutri-box">Su cok onemli! Suan {st.session_state.water_count}/8 bardak. {kalan} bardak daha ic!</div>', unsafe_allow_html=True)
+            elif "kalori" in prompt_lower:
+                st.markdown(f'<div class="nutri-box">Bugun: {st.session_state.calorie_today} kcal<br>Hedef: 2000 kcal<br>Kalan: {max(0, 2000 - st.session_state.calorie_today)} kcal</div>', unsafe_allow_html=True)
+            else:
+                st.markdown('<div class="nutri-box">Sorularinizi yanitliyorum! "Pilav yerine ne yiyebilirim?" veya "Kalorim ne durumda?" diyebilirsiniz.</div>', unsafe_allow_html=True)
