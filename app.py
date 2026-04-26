@@ -28,7 +28,7 @@ st.markdown(""""
 
 /* Animated Food Background */
 .food-bg {
-    position: fixed; top: -100px; left: 0; right: 0; bottom: -100px; z-index: 0; overflow: visible; pointer-events: none;
+    position: fixed; top: -200px; left: 0; right: 0; bottom: -200px; z-index: 0; overflow: visible; pointer-events: none;
 }
 .food-fall {
     position: absolute; font-size: 45px; opacity: 0.8; animation: foodFall linear infinite;
@@ -37,7 +37,7 @@ st.markdown(""""
     0% { transform: translateY(-100px) rotate(0deg); opacity: 0; }
     5% { opacity: 0.8; }
     95% { opacity: 0.8; }
-    100% { transform: translateY(calc(100vh + 100px)) rotate(360deg); opacity: 0; }
+    100% { transform: translateY(calc(100vh + 200px)) rotate(360deg); opacity: 0; }
 }
 
 .navbar {
