@@ -323,6 +323,120 @@ elif st.session_state.step == 3:
 
 # === ANA UYGULAMA (step=4) ===
 elif st.session_state.step == 4:
+    # Sidebar menü
+    st.markdown("""
+    <style>
+    .neon-text {
+        color: #ff00ff;
+        text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff;
+        font-size: 18px;
+        font-weight: bold;
+    }
+    .neon-cyan {
+        color: #00ffff;
+        text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+    }
+    .neon-orange {
+        color: #ff9a56;
+        text-shadow: 0 0 10px #ff9a56, 0 0 20px #ff9a56;
+    }
+    .sidebar-menu {
+        background: linear-gradient(180deg, #1a1a2e 0%, #0a0a15 100%);
+        padding: 15px;
+        border-radius: 15px;
+        margin-top: 20px;
+    }
+    .menu-header {
+        color: #e040fb;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(224, 64, 251, 0.3);
+    }
+    .menu-item {
+        color: rgba(255,255,255,0.8);
+        padding: 12px 15px;
+        margin: 5px 0;
+        border-radius: 10px;
+        background: rgba(255,255,255,0.05);
+        transition: all 0.3s;
+        cursor: pointer;
+        font-size: 14px;
+    }
+    .menu-item:hover {
+        background: rgba(224, 64, 251, 0.2);
+        color: #e040fb;
+    }
+    .menu-item.active {
+        background: linear-gradient(90deg, rgba(224, 64, 251, 0.3), transparent);
+        color: #e040fb;
+        border-left: 3px solid #e040fb;
+    }
+    .sub-menu {
+        color: rgba(255,255,255,0.6);
+        padding: 8px 15px 8px 30px;
+        font-size: 13px;
+        margin: 3px 0;
+        border-radius: 8px;
+        background: rgba(255,255,255,0.03);
+    }
+    .sub-menu:hover {
+        color: #00ffff;
+        background: rgba(0, 255, 255, 0.1);
+    }
+    </style>
+    <div class="sidebar-menu">
+        <div class="menu-header">NAVIGASYON</div>
+        <div class="menu-item active">Ana Panel</div>
+        <div class="menu-item">Diyet Listesi</div>
+        <div class="menu-item">Su Takibi</div>
+        <div class="menu-item">Adim & Uyku</div>
+        <div class="menu-item">Orucluk</div>
+        <div class="menu-item">Duygusal Yeme</div>
+        <div class="menu-item">Nutri Asistan</div>
+        <br>
+        <div class="menu-header">AYARLAR</div>
+        <div class="sub-menu">Profil Düzenle</div>
+        <div class="sub-menu">Hedef Degistir</div>
+        <div class="sub-menu">Diyet Tercihi</div>
+        <div class="sub-menu">Bildirimler</div>
+        <br>
+        <div class="menu-header">ROZETLER</div>
+        <div class="sub-menu">Kazanilan Rozetler</div>
+        <div class="sub-menu">Basarilar</div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Sidebar
+    with st.sidebar:
+        st.markdown('<div style="text-align:center;padding:10px 0;"><span style="font-size:40px;">🐱</span><br><span class="neon-text">' + st.session_state.user_name + '</span></div>', unsafe_allow_html=True)
+        st.markdown("---")
+        
+        selected_menu = st.radio("Menu", [
+            "Ana Panel", 
+            "Diyet Listesi", 
+            "Su Takibi", 
+            "Adim & Uyku", 
+            "Orucluk",
+            "Duygusal Yeme", 
+            "Nutri Asistan"
+        ], index=0)
+        
+        st.markdown("---")
+        st.markdown('<div class="neon-cyan" style="font-size:12px;text-align:center;">PUAN</div>', unsafe_allow_html=True)
+        st.markdown('<div style="text-align:center;font-size:32px;font-weight:bold;color:#00ffff;text-shadow:0 0 15px #00ffff;">' + str(st.session_state.points) + '</div>', unsafe_allow_html=True)
+        
+        st.markdown("---")
+        with st.expander("Ayarlar"):
+            st.write("Profil Düzenle")
+            st.write("Hedef Degistir")
+            st.write("Diyet Tercihi")
+        with st.expander("Rozetler"):
+            for badge in st.session_state.badges:
+                st.write(f"🏅 {badge}")
+    
     st.markdown('<nav class="navbar"><div class="logo">DiyetX</div><div style="color:white;">Hos geldin, <b>' + st.session_state.user_name + '</b>!</div></nav><br><br><br>', unsafe_allow_html=True)
     
     col0, col1, col2 = st.columns(3)
