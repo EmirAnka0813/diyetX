@@ -404,14 +404,14 @@ elif st.session_state.step == 4:
     with col_a1:
         st.metric("Bugunku Adim", f"{st.session_state.steps}", "adim")
         new_steps = st.number_input("Adim ekle", 0, 50000, 1000, key="steps")
-        if st.button("Ekle"):
+        if st.button("Adim Ekle", key="steps_add_btn"):
             st.session_state.steps += new_steps
             st.session_state.points += 5
             st.rerun()
     with col_a2:
         st.metric("Uyku", f"{st.session_state.sleep_hours}h", "saat")
         new_sleep = st.slider("Uyku", 0, 12, 7, key="sleep")
-        if st.button("Kaydet"):
+        if st.button("Uyku Kaydet", key="sleep_save_btn"):
             st.session_state.sleep_hours = new_sleep
             if new_sleep >= 7 and "IyI Uyku" not in st.session_state.badges:
                 st.session_state.badges.append("IyI Uyku")
@@ -444,7 +444,7 @@ elif st.session_state.step == 4:
         for r in st.session_state.meal_reminders:
             st.write(f"- {r}")
         new_r = st.text_input("Yeni hatirlatma", key="reminder")
-        if st.button("Ekle") and new_r:
+        if st.button("Hatirlati Ekle", key="reminder_add_btn") and new_r:
             st.session_state.meal_reminders.append(new_r)
             st.rerun()
     
@@ -452,7 +452,7 @@ elif st.session_state.step == 4:
     col_e1, col_e2 = st.columns(2)
     with col_e1:
         mood = st.selectbox("Ruh halin?", ["Mutlu", "Uzgun", "Stresli", "Sikilmis", "Yorgun", "Endiseseli"], key="mood")
-        if st.button("Kaydet"):
+        if st.button("Duygu Kaydet", key="emotion_save_btn"):
             st.session_state.emotional_log.append({"tarih": datetime.now().strftime("%d.%m.%Y %H:%M"), "ruh": mood, "kalori": st.session_state.calorie_today})
             st.session_state.points += 5
             st.success("Kaydedildi!")
