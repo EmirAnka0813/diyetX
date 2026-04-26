@@ -30,7 +30,7 @@ st.markdown("""
     position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; overflow: hidden; pointer-events: none;
 }
 .food-fall {
-    position: absolute; font-size: 30px; opacity: 0.06; animation: foodFall linear infinite;
+    position: absolute; font-size: 25px; opacity: 0.03; animation: foodFall linear infinite;
 }
 @keyframes foodFall {
     0% { transform: translateY(-50px) rotate(0deg); opacity: 0; }
@@ -148,16 +148,22 @@ food_images = [
     "https://images.unsplash.com/photo-1546470427-0d4db154cce8?w=100",  # tomato
 ]
 
+import random
+
 st.markdown('<div class="food-bg">', unsafe_allow_html=True)
-for i in range(60):
-    if i < len(food_images):
-        img = f'<img src="{food_images[i % len(food_images)]}" style="width:50px;height:50px;object-fit:cover;border-radius:10px;" loading="lazy">'
-    else:
-        img = food_icons[i % len(food_icons)]
-    left = (i * 3) % 100
-    delay = (i * 0.6) % 18
-    duration = 15 + (i % 10)
-    st.markdown(f'<div class="food-fall" style="left:{left}%;animation-delay:{delay:.1f}s;animation-duration:{duration}s;">{img}</div>', unsafe_allow_html=True)
+# Create more randomized food positions
+food_items = []
+for i in range(80):
+    food_items.append({
+        'img': food_images[i % len(food_images)] if i < len(food_images) else food_icons[i % len(food_icons)],
+        'left': random.randint(0, 95),
+        'delay': round(random.uniform(0, 20), 1),
+        'duration': random.randint(12, 25)
+    })
+
+for item in food_items:
+    img_html = f'<img src="{item["img"]}" style="width:40px;height:40px;object-fit:cover;border-radius:8px;opacity:0.8;" loading="lazy">'
+    st.markdown(f'<div class="food-fall" style="left:{item["left"]}%;animation-delay:{item["delay"]}s;animation-duration:{item["duration"]}s;">{img_html}</div>', unsafe_allow_html=True)
 st.markdown('</div>', unsafe_allow_html=True)
 
 # === SESSION STATES ===
@@ -231,7 +237,7 @@ def generate_diet_plan(name, current_weight, goal_weight, activity, diet_pref):
 if st.session_state.step == 0:
     st.markdown('<nav class="navbar"><div class="logo">DiyetX</div><a href="#features" style="color:rgba(255,255,255,0.7);text-decoration:none;margin-right:20px;">Ozellikler</a><a href="#diet" style="color:rgba(255,255,255,0.7);text-decoration:none;margin-right:20px;">Diyet</a><a href="#auth" class="nav-cta">Ucretsiz Basla</a></nav>', unsafe_allow_html=True)
     
-    st.markdown('<div class="hero"><div class="hero-badge">Turkiye\'nin En Akilli Diyet Uygulamasi</div><div class="nutri-float">🤖</div><h1 class="hero-title">Sagliginizi<br>Yapay Zeka ile<br>Yonetxin</h1><p class="hero-subtitle">Kisisel diyet listeniz, AI destekli Nutri asistaniniz ve motivasyon dolu gamifikasyon ile hedefinize ulasin!</p><div class="hero-cta-group"><a href="#auth" class="btn-primary">Hemen Basla - Ucretsiz</a><a href="#features" class="btn-secondary">Ozellikleri Gor</a></div><div class="hero-stats"><div><div class="stat-number">50K+</div><div class="stat-label">Aktif Kullanici</div></div><div><div class="stat-number">4.9</div><div class="stat-label">Uygulama Puani</div></div><div><div class="stat-number">1000+</div><div class="stat-label">Turk Yemegi</div></div></div></div>', unsafe_allow_html=True)
+    st.markdown('<div class="hero"><div class="hero-badge">Turkiye\'nin En Akilli Diyet Uygulamasi</div><div class="nutri-float">🐱</div><h1 class="hero-title">Sagliginizi<br>Yapay Zeka ile<br>Yonetxin</h1><p class="hero-subtitle">Kisisel diyet listeniz, AI destekli Nutri asistaniniz ve motivasyon dolu gamifikasyon ile hedefinize ulasin!</p><div class="hero-cta-group"><a href="#auth" class="btn-primary">Hemen Basla - Ucretsiz</a><a href="#features" class="btn-secondary">Ozellikleri Gor</a></div><div class="hero-stats"><div><div class="stat-number">50K+</div><div class="stat-label">Aktif Kullanici</div></div><div><div class="stat-number">4.9</div><div class="stat-label">Uygulama Puani</div></div><div><div class="stat-number">1000+</div><div class="stat-label">Turk Yemegi</div></div></div></div>', unsafe_allow_html=True)
     
     st.markdown('<section class="features" id="features"><div style="text-align:center;margin-bottom:80px;"><div class="section-tag">Neden DiyetX?</div><h2 class="section-title">Her Sey Sizin Icin Tasarlandi</h2><p class="section-desc">En sevdiyiniz ozellikler bir arada. Kolay, hizli ve eglenceli!</p></div><div class="features-grid"><div class="feature-card"><div class="feature-icon">ASISTAN</div><h3 class="feature-title">Nutri AI Asistan</h3><p class="feature-desc">7/24 destek veren, motivasyon salan yapay zeka asistanin.</p></div><div class="feature-card"><div class="feature-icon">LISTE</div><h3 class="feature-title">Kisisel Diyet Listesi</h3><p class="feature-desc">Hedeflerine gore olusturulan haftalik diyet listesi. Turk mutfagina ozel!</p></div><div class="feature-card"><div class="feature-icon">KAMERA</div><h3 class="feature-title">Yemek Analizi</h3><p class="feature-desc">Tabaginin fotografini cek, yapay zeka kalorini hesaplasin.</p></div><div class="feature-card"><div class="feature-icon">ROZET</div><h3 class="feature-title">Oyunlastirma</h3><p class="feature-desc">Puan topla, rozet kazan, streak tut. Kilo verme eglenceli!</p></div><div class="feature-card"><div class="feature-icon">SU</div><h3 class="feature-title">Su Takibi</h3><p class="feature-desc">Gunluk su hedefini unutma. Hatirlatgilarla!</p></div><div class="feature-card"><div class="feature-icon">SAAT</div><h3 class="feature-title">Intermittent Fasting</h3><p class="feature-desc">16:8, 18:6, 20:4... Senin icin en uygun oruc programi!</p></div></div></section>', unsafe_allow_html=True)
     
