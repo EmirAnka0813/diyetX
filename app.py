@@ -196,10 +196,10 @@ if 'diet_pref' not in st.session_state: st.session_state.diet_pref = "Serbest"
 def generate_diet_plan(name, current_weight, goal_weight, activity, diet_pref):
     plans = {
         "Serbest": {
-            "Pazartesi": [("Yulaf + Meyve + Bal", 350, 12, 55, 10), ("Izgara Tavuk + Salata", 450, 38, 15, 22), ("Firinda Somon + Sebze", 420, 32, 18, 28), ("Bir Avuc Badem", 150, 5, 8, 12)],
-            "Sali": [("Menemen + Ekmek", 300, 14, 25, 15), ("Kuru Fasulye + Pilav", 520, 22, 65, 18), ("Yogurtlu Semizotu", 280, 12, 30, 12), ("Meyve", 90, 2, 22, 0)],
-            "Carsamba": [("Sutlac + Ceviz", 380, 10, 58, 14), ("Adana Kebap + Lavas", 580, 32, 42, 32), ("Mercimek Corbasi + Salata", 320, 14, 42, 8), ("Kuru Incir", 110, 2, 28, 0)],
-            "Persembe": [("Peynirli Omlet", 280, 18, 4, 22), ("Tavuk + Makarna + Salata", 520, 38, 55, 18), ("Sebzeli Guvec + Ekmek", 360, 10, 48, 14), ("Smoothie", 170, 6, 28, 4)],
+            "Pazartesi": [("Yulaf + Meyve + Bal", 350, 12, 55, 10), ("Izgara Tavuk + Salata", 450, 38, 15, 22), ("Firin da Somon + Sebze", 420, 32, 18, 28), ("Bir Avu&#231; Badem", 150, 5, 8, 12)],
+            "Sal&#305;": [("Menemen + Ekmek", 300, 14, 25, 15), ("Kuru Fasulye + Pilav", 520, 22, 65, 18), ("Yo&#287;urtlu Semizotu", 280, 12, 30, 12), ("Meyve", 90, 2, 22, 0)],
+            "&#199;ar&#351;amba": [("S&#252;tla&#231; + Ceviz", 380, 10, 58, 14), ("Adana Kebap + Lava&#351;", 580, 32, 42, 32), ("Mercimek &#199;orbas&#305; + Salata", 320, 14, 42, 8), ("Kuru &#214;ncir", 110, 2, 28, 0)],
+            "Per&#351;embe": [("Peynirli Omlet", 280, 18, 4, 22), ("Tavuk + Makarna + Salata", 520, 38, 55, 18), ("Sebzeli G&#252;ve&#231; + Ekmek", 360, 10, 48, 14), ("Smoothie", 170, 6, 28, 4)],
             "Cuma": [("Simit + Peynir + Cay", 320, 12, 40, 14), ("Balik + Patates + Salata", 480, 34, 38, 24), ("Fasulye Pilaki", 380, 16, 52, 12), ("Havuc + Humus", 140, 4, 18, 6)],
             "Cumartesi": [("Serpme Kahvalti", 480, 18, 38, 28), ("Iskender + Ayran", 680, 32, 60, 30), ("Zeytinyagli Enginar", 400, 8, 55, 16), ("Seftali", 70, 1, 18, 0)],
             "Pazar": [("Kahvalti Tabagi", 450, 20, 35, 26), ("Etli Nohut + Pilav", 550, 26, 62, 22), ("Baklava (2 dilim)", 380, 6, 48, 18), ("Findik", 170, 4, 5, 16)]
@@ -339,7 +339,7 @@ elif st.session_state.step == 4:
     st.markdown("### Haftalik Diyet Listesi")
     
     if st.session_state.diet_plan:
-        days = ["Pazartesi", "Sali", "Carsamba", "Persembe", "Cuma", "Cumartesi", "Pazar"]
+        days = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"]
         today = days[datetime.now().weekday()]
         
         # Bugunkü gunü vurgula
