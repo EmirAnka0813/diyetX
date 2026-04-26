@@ -342,13 +342,15 @@ elif st.session_state.step == 4:
         days = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"]
         today = days[datetime.now().weekday()]
         
-        # Bugunkü gunü vurgula
+        # Bugunku gunu vurgula
         col_nav1, col_nav2 = st.columns([1, 3])
         with col_nav1:
-            if st.button("BUG&#220;N", use_container_width=True):
+            if st.button("BUGUN", key="bugun_btn"):
+                st.session_state.selected_day = today
+            selected_day = st.session_state.get("selected_day", today)
+            if selected_day not in days:
                 selected_day = today
-            else:
-                selected_day = st.selectbox("G&#252;n se&#231;in", days, index=days.index(today) if today in days else 0)
+            selected_day = st.selectbox("Gun sec", days, index=days.index(selected_day) if selected_day in days else 0)
         with col_nav2:
             st.markdown("<small style='color:#e040fb;'>Haftanin gunlerini gor ve kendi diet planina gore yemeklerini sec!</small>", unsafe_allow_html=True)
         
