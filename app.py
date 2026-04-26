@@ -279,7 +279,7 @@ if st.session_state.step == 0:
                             st.session_state.logged_in = True
                             st.session_state.user_name = reg_name
                             st.session_state.user_id = hashlib.md5(reg_email.encode()).hexdigest()
-                            st.session_state.step = 4
+                            st.session_state.step = 3
                             st.rerun()
                         else:
                             st.error("Sifre en az 6 karakter!")
