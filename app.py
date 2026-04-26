@@ -28,16 +28,16 @@ st.markdown(""""
 
 /* Animated Food Background */
 .food-bg {
-    position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; overflow: visible; pointer-events: none;
+    position: fixed; top: -100px; left: 0; right: 0; bottom: -100px; z-index: 0; overflow: visible; pointer-events: none;
 }
 .food-fall {
-    position: absolute; font-size: 45px; opacity: 0.6; animation: foodFall linear infinite;
+    position: absolute; font-size: 45px; opacity: 0.8; animation: foodFall linear infinite;
 }
 @keyframes foodFall {
-    0% { transform: translateY(-50px) rotate(0deg); opacity: 0; }
-    10% { opacity: 0.06; }
-    90% { opacity: 0.06; }
-    100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    0% { transform: translateY(-100px) rotate(0deg); opacity: 0; }
+    5% { opacity: 0.8; }
+    95% { opacity: 0.8; }
+    100% { transform: translateY(calc(100vh + 100px)) rotate(360deg); opacity: 0; }
 }
 
 .navbar {
