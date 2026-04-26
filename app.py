@@ -199,15 +199,30 @@ def generate_diet_plan(name, current_weight, goal_weight, activity, diet_pref):
         },
         "Dusuk karbonhidrat": {
             "Pazartesi": [("Yumurta + Avokado", 320, 16, 8, 26), ("Salata + Tavuk", 280, 32, 6, 14), ("Et + Brokoli + Kesar", 420, 38, 4, 26), ("Ceviz", 160, 4, 4, 16)],
-            "Sali": [("Peynir + Domates", 180, 10, 4, 14), ("Ton Baligi Salatasi", 260, 28, 2, 14), ("Tavuk Gogsu + Sebze", 320, 38, 6, 10), ("Badam", 140, 6, 6, 12)]
+            "Sali": [("Peynir + Domates", 180, 10, 4, 14), ("Ton Baligi Salatasi", 260, 28, 2, 14), ("Tavuk Gogsu + Sebze", 320, 38, 6, 10), ("Badam", 140, 6, 6, 12)],
+            "Carsamba": [("Yumurta + Peynir", 280, 20, 4, 20), ("Salata + Ton Baligi", 250, 28, 5, 12), ("Tavuk Gögüsü + Sebze", 300, 35, 8, 14), ("Zeytin", 120, 2, 6, 10)],
+            "Persembe": [("Avokado + Yumurta", 300, 14, 10, 24), ("Yoğurtlu Tavuk", 270, 30, 8, 12), ("Balik + Salata", 320, 32, 6, 16), ("Ceviz", 160, 4, 4, 16)],
+            "Cuma": [("Peynirli Omlet", 260, 18, 4, 18), ("Ton Baligi Salatasi", 240, 26, 4, 12), ("Et + Brokoli", 350, 35, 6, 20), ("Badam", 140, 6, 6, 12)],
+            "Cumartesi": [("Yumurta Beyazi + Sebze", 200, 16, 4, 12), ("Salata + Tavuk", 280, 32, 6, 14), ("Balik + Tatlı Patates", 340, 30, 28, 14), ("Peynir", 150, 8, 2, 12)],
+            "Pazar": [("Avokado Toast + Yumurta", 320, 14, 22, 22), ("Yoğurt + Kuruyemis", 260, 14, 24, 12), ("Tavuk + Quinoa", 360, 34, 28, 12), ("Smoothie", 180, 6, 22, 6)]
         },
         "Yuksek protein": {
             "Pazartesi": [("6 Yumurta Beyazi + Peynir", 420, 38, 4, 22), ("300g Tavuk + Pilav", 520, 48, 52, 14), ("250g Somon + Patates", 480, 42, 32, 20), ("Whey Smoothie", 240, 32, 18, 4)],
-            "Sali": [("Yulaf + Protein Tozu", 380, 32, 48, 6), ("Kirmizi Et + Makarna", 580, 48, 52, 24), ("Baklava", 380, 6, 48, 18), ("Yogurt + Fistik", 190, 14, 18, 8)]
+            "Sali": [("Yulaf + Protein Tozu", 380, 32, 48, 6), ("Kirmizi Et + Makarna", 580, 48, 52, 24), ("Baklava", 380, 6, 48, 18), ("Yogurt + Fistik", 190, 14, 18, 8)],
+            "Carsamba": [("5 Yumurta + Peynir", 380, 32, 4, 24), ("Ton Baligi + Pilav", 500, 45, 48, 18), ("Tavuk Gögüsü + Makarna", 520, 46, 54, 16), ("Protein Bar", 220, 20, 22, 8)],
+            "Persembe": [("Smoothie + Protein", 360, 30, 44, 10), ("350g Kirmizi Et + Sebze", 550, 50, 20, 30), ("Yumurta + Ekmek", 380, 24, 30, 18), ("Yoğurt + Ceviz", 280, 18, 16, 18)],
+            "Cuma": [("4 Yumurta + Peynir", 340, 28, 4, 22), ("Balik + Patates", 480, 42, 38, 22), ("Tavuk + quino", 500, 48, 40, 16), ("Kuru Uzum + Findik", 200, 4, 24, 10)],
+            "Cumartesi": [("Pankek + Protein", 420, 32, 50, 12), ("300g Et + Pilav", 600, 52, 56, 22), ("Somon + Tatlı Patates", 520, 44, 36, 24), ("Protein Shake", 200, 25, 10, 4)],
+            "Pazar": [("Kahvalti: 3 Yumurta + Sucuk", 480, 30, 8, 34), ("Kirmizi Et + Bulgur", 580, 48, 44, 26), ("Pilav + Nohut", 520, 22, 68, 16), ("Findik + Badem", 240, 6, 12, 20)]
         },
         "Vejetaryen": {
             "Pazartesi": [("Yulaf + Meyve + Sut", 330, 10, 52, 8), ("Nohutlu Pilav + Salata", 420, 16, 68, 10), ("Izgara Sebze + Humus", 360, 14, 52, 12), ("Meyve", 90, 2, 22, 0)],
-            "Sali": [("Smoothie Bowl + Granola", 300, 8, 52, 6), ("Mercimek Corbasi + Pilav", 380, 16, 62, 8), ("Sebze Guvec + Peynir", 330, 14, 32, 14), ("Badam", 140, 5, 8, 12)]
+            "Sali": [("Smoothie Bowl + Granola", 300, 8, 52, 6), ("Mercimek Corbasi + Pilav", 380, 16, 62, 8), ("Sebze Guvec + Peynir", 330, 14, 32, 14), ("Badam", 140, 5, 8, 12)],
+            "Carsamba": [("Avokado Toast + Yumurta", 320, 14, 22, 22), ("Leblebi + Domates", 260, 10, 36, 8), ("Falafel + Pilav", 420, 16, 58, 14), ("Meyve", 100, 2, 24, 0)],
+            "Persembe": [("Sütlaç + Ceviz", 340, 10, 54, 12), ("Kuru Fasulye + Pilav", 400, 18, 62, 10), ("Sebze Corbasi + Ekmek", 280, 12, 42, 8), ("Peynir", 150, 8, 2, 12)],
+            "Cuma": [("Menemen + Ekmek", 300, 14, 25, 15), ("Nohutlu Yaprak Sarma", 350, 14, 40, 14), ("Izgara Peynir + Salata", 320, 16, 12, 20), ("Zeytin", 120, 2, 6, 10)],
+            "Cumartesi": [("Simit + Peynir + Cay", 320, 12, 40, 14), ("Mantarli Pilav + Salata", 380, 14, 52, 12), ("Sebze Güveç + Yoğurt", 340, 16, 36, 14), ("Meyve", 90, 2, 22, 0)],
+            "Pazar": [("Serpme Kahvalti", 400, 16, 38, 22), ("Mercimek Corbasi + Pilav", 400, 18, 64, 10), ("Izgara Sebze + Humus", 360, 14, 48, 12), ("Kuru Incir", 110, 2, 28, 0)]
         }
     }
     return plans.get(diet_pref, plans["Serbest"])
@@ -318,7 +333,17 @@ elif st.session_state.step == 4:
     
     if st.session_state.diet_plan:
         days = ["Pazartesi", "Sali", "Carsamba", "Persembe", "Cuma", "Cumartesi", "Pazar"]
-        selected_day = st.selectbox("Gun sec", days)
+        today = days[datetime.now().weekday()]
+        
+        # Bugunkü gunü vurgula
+        col_nav1, col_nav2 = st.columns([1, 3])
+        with col_nav1:
+            if st.button("BUGUN", use_container_width=True):
+                selected_day = today
+            else:
+                selected_day = st.selectbox("Gun secin", days, index=days.index(today) if today in days else 0)
+        with col_nav2:
+            st.markdown("<small style='color:#e040fb;'>Haftanin gunlerini gor ve kendi diet planina gore yemeklerini sec!</small>", unsafe_allow_html=True)
         
         if selected_day in st.session_state.diet_plan:
             day_meals = st.session_state.diet_plan[selected_day]
