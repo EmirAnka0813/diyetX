@@ -3,6 +3,11 @@ DiyetX - AI Destekli Diyet Uygulaması
 Tüm Rakip Özellikleri + Nutri AI
 """
 
+import os
+
+# Railway PORT ayarı
+PORT = int(os.environ.get("PORT", 8080))
+
 import streamlit as st
 import pandas as pd
 from datetime import datetime, time
