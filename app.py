@@ -19,8 +19,9 @@ import sentry_sdk
 sentry_sdk.init("https://97f83997b663a5a3545311ee0582c716@o4511259385397248.ingest.us.sentry.io/4511281486626816")
 
 # === PREMIUM CSS ===
-st.markdown("""
+st.markdown(""""
 <style>
+<meta charset="UTF-8">
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 * { font-family: 'Inter', sans-serif; }
 .stApp { background: #000000; color: white; min-height: 100vh; overflow-x: hidden; }
